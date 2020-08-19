@@ -1,7 +1,7 @@
 ﻿namespace neko.host
 {
     using System.Runtime.InteropServices;
-    using nekoVM_proxy;
+    using Neko;
 
     internal class Program
     {
