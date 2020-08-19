@@ -15,17 +15,22 @@
     <!-- core library -->
     <Content CopyToOutputDirectory="PreserveNewest" Include="runtimes/linux-x64/native/libneko.so" Pack="true" PackagePath="runtimes/linux-x64/native/libneko.so" />
     <Content CopyToOutputDirectory="PreserveNewest" Include="runtimes/osx-x64/native/libneko.dylib" Pack="true" PackagePath="runtimes/osx-x64/native/libneko.dylib" />
-    <Content CopyToOutputDirectory="PreserveNewest" Include="runtimes/win-x64/native/neko.dll" Pack="true" PackagePath="runtimes/win-x64/native/neko.dll"/>
+    <Content CopyToOutputDirectory="PreserveNewest" Include="runtimes/win-x64/native/neko.dll" Pack="true" PackagePath="runtimes/win-x64/native/neko.dll" />
   </ItemGroup>
   <ItemGroup>
     <!-- additional library -->
-    <Content CopyToOutputDirectory="PreserveNewest" Include="runtimes/win-x64/native/gcmt-dll.dll" Pack="true" PackagePath="runtimes/win-x64/native/gcmt-dll.dll"/>
+    <Content CopyToOutputDirectory="PreserveNewest" Include="runtimes/win-x64/native/gcmt-dll.dll" Pack="true" PackagePath="runtimes/win-x64/native/gcmt-dll.dll" />
   </ItemGroup>
   <ItemGroup>
     <!-- std neko library -->
     <Content CopyToOutputDirectory="PreserveNewest" Include="runtimes/linux-x64/native/std.ndll" Pack="true" PackagePath="runtimes/linux-x64/native/std.ndll" />
     <Content CopyToOutputDirectory="PreserveNewest" Include="runtimes/osx-x64/native/std.ndll" Pack="true" PackagePath="runtimes/osx-x64/native/std.ndll" />
-    <Content CopyToOutputDirectory="PreserveNewest" Include="runtimes/win-x64/native/std.ndll" Pack="true" PackagePath="runtimes/win-x64/native/std.ndll"/>
+    <Content CopyToOutputDirectory="PreserveNewest" Include="runtimes/win-x64/native/std.ndll" Pack="true" PackagePath="runtimes/win-x64/native/std.ndll" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="test.n">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 </Project>
 

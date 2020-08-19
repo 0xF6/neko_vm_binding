@@ -7,15 +7,38 @@
     using System.Runtime.InteropServices;
     using static val_type;
 
+
+    public unsafe class Neko : IDisposable
+    {
+        internal NekoVM* _vm;
+        public Neko()
+        {
+            Native.neko_global_init();
+            _vm = Native.neko_vm_alloc(IntPtr.Zero.ToPointer());
+            Native.neko_vm_select(_vm);
+        }
+
+        #region IDisposable
+
+        private void _release(bool isSuppress)
+        {
+            Native.neko_global_free();
+            NativeLibrary.Free(Native._ref);
+            if (isSuppress)
+                GC.SuppressFinalize(this);
+        }
+        public void Dispose() => _release(true);
+        ~Neko() => _release(false);
+
+        #endregion
+    }
+
     internal static class Program
     {
         public static unsafe void Main(string[] args)
         {
-            Native.neko_global_init();
-            NekoVM* result = Native.neko_vm_alloc(IntPtr.Zero.ToPointer());
-            Native.neko_vm_select(result);
+            using var vm = new Neko();
             Execute(LoadModule("test.n"));
-            Native.neko_global_free();
         }
         private static unsafe void Execute(NekoValue* module)
         {
@@ -45,7 +68,7 @@
     }
     internal static unsafe class Native
     {
-        private static IntPtr _ref;
+        internal static IntPtr _ref;
         static Native()
         {
             if (RuntimeInformation.ProcessArchitecture != Architecture.X64)
