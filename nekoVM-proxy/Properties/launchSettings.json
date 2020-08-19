@@ -3,7 +3,7 @@
     "nekoVM-proxy": {
       "commandName": "Project",
       "environmentVariables": {
-        "NEKO_JIT_DEBUG": "ON"
+        "NEKO_JIT_DEBUG": "OFF"
       }
     }
   }
