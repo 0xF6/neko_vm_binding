@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "nekoVM-proxy": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "NEKO_JIT_DEBUG": "ON"
+      }
+    }
+  }
+}

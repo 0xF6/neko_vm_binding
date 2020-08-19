@@ -1,0 +1,4 @@
+$print("started")
+$exports.log = function() { $print("log test") };
+$exports.x = 33;
+$exports.f = function(x) { return x * 2 + 1; }
