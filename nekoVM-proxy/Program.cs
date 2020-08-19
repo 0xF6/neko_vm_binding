@@ -19,12 +19,8 @@
         }
         private static unsafe void Execute(NekoValue* module)
         {
-            var id_x = Native.neko_val_id("x");
-            var f_x = Native.neko_val_field(module, id_x);
-            Assert.IsTrue(NekoType.is_int(f_x));
             var id = Native.neko_val_id("log");
             var f = Native.neko_val_field(module, id);
-            Assert.IsTrue(NekoType.is_function(f));
             Native.neko_val_call0(f);
         }
         private static unsafe NekoValue* LoadModule(string moduleName)
@@ -32,7 +28,7 @@
             var args = stackalloc NekoValue*[2];
             var exception = (NekoValue*)null;
             var loader = Native.neko_default_loader(null,0);
-            args[0] = Native.neko_alloc_string(moduleName.ToRef());
+            args[0] = Native.neko_alloc_string(moduleName);
             args[1] = loader;
                 
             var a1 = Native.neko_val_id("loadmodule");
@@ -47,19 +43,6 @@
             return result;
         }
     }
-
-    public static class Assert
-    {
-        public static void IsTrue(bool v)
-        {
-            if(!v)
-                throw new Exception();
-        }
-    }
-    internal static unsafe class NativeEx
-    {
-        public static void* ToRef(this string str) => Marshal.StringToHGlobalAnsi(str).ToPointer();
-    }
     internal static unsafe class Native
     {
         private static IntPtr _ref;
@@ -72,11 +55,10 @@
 
         private static IntPtr Resolver(string name, Assembly asm, DllImportSearchPath? search)
         {
-            return NativeLibrary.Load($"./runtimes/{_get_os()}-x64/native/{_format_lib(name)}");
             // TODO, research alternative method loading library when run program with debugger
             if (Debugger.IsAttached && name == "neko") // wtf
                 name = $"./runtimes/{_get_os()}-x64/native/{_format_lib(name)}";
-            IntPtr _resolver() => NativeLibrary.Load(@"C:\git\nekoVM-proxy\nekoVM-proxy\bin\Debug\netcoreapp3.1\runtimes\win-x64\native\neko.dll");
+            IntPtr _resolver() => NativeLibrary.Load(name);
             if (!name.Equals("neko", StringComparison.InvariantCultureIgnoreCase))
                 return _resolver();
             if (_ref == IntPtr.Zero)
@@ -128,8 +110,8 @@
             ref NekoValue* exc);
         [DllImport("neko", CharSet = CharSet.Ansi)]
         public static extern int neko_val_id(string s);
-        [DllImport("neko")]
-        public static extern NekoValue* neko_alloc_string(void* chars);
+        [DllImport("neko", CharSet = CharSet.Ansi)]
+        public static extern NekoValue* neko_alloc_string(string str);
         [DllImport("neko")]
         public static extern NekoValue* neko_val_field(NekoValue* o, int f);
         [DllImport("neko")]
