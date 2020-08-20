@@ -108,5 +108,8 @@
         public static extern NekoValue* neko_alloc_object(NekoValue* value);
         [DllImport("neko")]
         public static extern void neko_alloc_field(NekoValue* obj, int f, NekoValue* value);
+
+        [DllImport("neko", CharSet = CharSet.Ansi)]
+        public static extern NekoValue* neko_alloc_function(void* c_prim, uint args, string name);
     }
 }
