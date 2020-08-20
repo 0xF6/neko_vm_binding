@@ -1,20 +1,22 @@
 ﻿namespace Neko.Base
 {
     using System;
-    using Base;
     using NativeRing;
 
     public sealed unsafe class NekoFunction : NekoObject
     {
         private readonly NekoModule _module;
-        private readonly string _functionName;
-        private readonly int _argCount;
+        private readonly NekoFunctionKind _kind;
+        public string Name { get; }
+        public int ArgCount { get; }
+
         public NekoFunction(NekoModule module, string functionName, NekoValue* value) : base(value)
         {
             NekoAssert.IsFunction(value, functionName);
             _module = module;
-            _functionName = functionName;
-            _argCount = AsInternal()->nargs;
+            Name = functionName;
+            ArgCount = AsInternal()->nargs;
+            _kind = NekoFunctionKind.Imported;
         }
 
         public static NekoFunction Create(NekoModule module, string functionName)
@@ -25,11 +27,13 @@
 
         public object Invoke(params object[] args)
         {
-            if(args.Length != _argCount)
+            if(args.Length != ArgCount)
                 throw new Exception();
 
             return Native.neko_val_call0(this.@ref)->t; // TODO
         }
+
+        public bool IsExported() => _kind == NekoFunctionKind.Exported;
 
 
         internal __function* AsInternal() => (__function*) @ref;
