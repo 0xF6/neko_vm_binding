@@ -1,4 +1,4 @@
-﻿namespace Neko.NativeRing
+namespace Neko.NativeRing
 {
     using System;
     using System.Diagnostics;
@@ -89,5 +89,14 @@
 
         [DllImport("neko")]
         public static extern NekoValue* neko_val_call0(NekoValue* function);
+        [DllImport("neko")]
+        public static extern NekoValue* neko_val_call1(NekoValue* function, NekoValue* v1);
+        [DllImport("neko")]
+        public static extern NekoValue* neko_val_call2(NekoValue* function, NekoValue* v1, NekoValue* v2);
+        [DllImport("neko")]
+        public static extern NekoValue* neko_val_call3(NekoValue* function, NekoValue* v1, NekoValue* v2, NekoValue* v3);
+        [DllImport("neko")]
+        public static extern NekoValue* neko_val_callN(NekoValue* function, NekoValue** args, int nargs);
+
     }
 }
