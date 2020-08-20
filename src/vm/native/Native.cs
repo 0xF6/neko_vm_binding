@@ -7,7 +7,18 @@
 
     internal static unsafe class Native
     {
-        internal static IntPtr _ref;
+        private static IntPtr _ref;
+
+        internal static IntPtr libRef
+        {
+            get
+            {
+                if (_ref == IntPtr.Zero)
+                    return (_ref = NativeLibrary.Load("neko"));
+                return _ref;
+            }
+            set => _ref = value;
+        }
         static Native()
         {
             if (RuntimeInformation.ProcessArchitecture != Architecture.X64)
@@ -82,9 +93,11 @@
         public static extern void neko_val_buffer(NekoBuffer* buffer, NekoValue* value);
         [DllImport("neko")]
         public static extern NekoValue* neko_buffer_to_string(NekoBuffer* buffer);
-        public static NekoValue* val_null() => (NekoValue*)NativeLibrary.GetExport((IntPtr)_ref, "val_null");
-        public static NekoValue* val_true() => (NekoValue*)NativeLibrary.GetExport((IntPtr)_ref, "val_true");
-        public static NekoValue* val_false() => (NekoValue*)NativeLibrary.GetExport((IntPtr)_ref, "val_false");
+        public static NekoValue* v_null() => (NekoValue*) NativeLibrary.GetExport(libRef, "val_null");
+
+        public static NekoValue* v_true() => (NekoValue*) NativeLibrary.GetExport(libRef, "val_true");
+
+        public static NekoValue* v_false() => (NekoValue*) NativeLibrary.GetExport(libRef, "val_false");
 
 
         [DllImport("neko")]
@@ -108,8 +121,15 @@
         public static extern NekoValue* neko_alloc_object(NekoValue* value);
         [DllImport("neko")]
         public static extern void neko_alloc_field(NekoValue* obj, int f, NekoValue* value);
-
         [DllImport("neko", CharSet = CharSet.Ansi)]
         public static extern NekoValue* neko_alloc_function(void* c_prim, uint args, string name);
+        [DllImport("neko")]
+        public static extern NekoValue* neko_alloc_int32(int v);
+
+
+        public static NekoValue* neko_alloc_bool(bool b) => b ? v_true() : v_false();
+        public static NekoValue* neko_alloc_int(int v) => (NekoValue*) (IntPtr) ((v << 1) | 1);
+        
+
     }
 }
