@@ -9,7 +9,7 @@
         public char c;
 
         public bool IsNull() => t == default;
-        public val_type GetValueType() => (val_type) t;
+        public NekoValueType GetValueType() => (NekoValueType) t;
 
         public static string GetString(NekoValue* v) 
             => Marshal.PtrToStringUTF8((IntPtr)(&((NekoString*)v)->c));

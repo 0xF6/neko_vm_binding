@@ -1,5 +1,7 @@
 ﻿namespace Neko.Base
 {
+    using NativeRing;
+
     public abstract unsafe class NekoBehaviour : INekoDisposable
     {
         protected internal NekoValue* @ref;

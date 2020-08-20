@@ -1,4 +1,4 @@
-﻿namespace Neko
+﻿namespace Neko.NativeRing
 {
     using System;
 

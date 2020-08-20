@@ -1,4 +1,4 @@
-﻿namespace Neko
+﻿namespace Neko.NativeRing
 {
     using System.Runtime.CompilerServices;
 
@@ -7,8 +7,8 @@
         public uint t;
 
         public bool IsNull() 
-            => NekoType.get_valtype(Unsafe.AsPointer(ref this)) == val_type.VAL_NULL;
+            => NekoType.get_valtype(Unsafe.AsPointer(ref this)) == NekoValueType.VAL_NULL;
 
-        public val_type GetValueType() => (val_type) t;
+        public NekoValueType GetValueType() => (NekoValueType) t;
     }
 }

@@ -1,6 +1,6 @@
-﻿namespace Neko
+﻿namespace Neko.NativeRing
 {
-    public enum val_type : uint
+    public enum NekoValueType : uint
     {
         VAL_INT			= 0xFF,
         VAL_NULL		= 0,
