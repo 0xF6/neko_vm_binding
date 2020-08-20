@@ -102,5 +102,11 @@
         public static extern int neko_val_hash(NekoValue* value);
         [DllImport("neko")]
         public static extern NekoValue* neko_val_field_name(int field);
+
+
+        [DllImport("neko")]
+        public static extern NekoValue* neko_alloc_object(NekoValue* value);
+        [DllImport("neko")]
+        public static extern void neko_alloc_field(NekoValue* obj, int f, NekoValue* value);
     }
 }
