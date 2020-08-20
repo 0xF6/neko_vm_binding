@@ -98,5 +98,7 @@ namespace Neko.NativeRing
         [DllImport("neko")]
         public static extern NekoValue* neko_val_callN(NekoValue* function, NekoValue** args, int nargs);
 
+        [DllImport("neko")]
+        public static extern int neko_val_hash(NekoValue* value);
     }
 }
