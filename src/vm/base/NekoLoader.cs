@@ -25,7 +25,7 @@
             var b = Native.neko_alloc_buffer(null);
             Native.neko_val_buffer(b, exception);
             var raw = Native.neko_buffer_to_string(b);
-            throw new NekoModuleLoadException(file, NekoString.GetString(raw));
+            throw new ModuleLoadNekoException(file, NekoString.GetString(raw));
         }
     }
 }
