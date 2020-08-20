@@ -1,4 +1,4 @@
-namespace Neko.NativeRing
+﻿namespace Neko.NativeRing
 {
     using System;
     using System.Diagnostics;
@@ -100,5 +100,7 @@ namespace Neko.NativeRing
 
         [DllImport("neko")]
         public static extern int neko_val_hash(NekoValue* value);
+        [DllImport("neko")]
+        public static extern NekoValue* neko_val_field_name(int field);
     }
 }
