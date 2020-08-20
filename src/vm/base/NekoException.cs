@@ -24,4 +24,9 @@
         public TypeIsNotSupportNekoException(string ty) 
             : base($"'{ty}' is support type.") { }
     }
+
+    public sealed class InvalidArgumentNekoException : NekoException
+    {
+
+    }
 }
