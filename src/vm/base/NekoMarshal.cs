@@ -9,7 +9,6 @@
     using NativeRing;
     using static NativeRing.NekoValueType;
 
-    [SecurityCritical]
     public static unsafe class NekoMarshal
     {
         internal static readonly IDictionary<Type, NekoValueType> variants = new Dictionary<Type, NekoValueType>();
@@ -17,7 +16,6 @@
         static NekoMarshal()
         {
             variants.Add(typeof(int), VAL_INT32);
-            variants.Add(typeof(int), VAL_INT);
             variants.Add(typeof(string), VAL_STRING);
             variants.Add(typeof(bool), VAL_BOOL);
             variants.Add(typeof(float), VAL_FLOAT);
@@ -25,14 +23,30 @@
             variants.Add(typeof(NekoObject), VAL_OBJECT);
         }
 
-        public static T PtrToStruct<T>(NekoValue* value) 
-            => CreateInstance<T>(value);
+        public static T PtrToCLR<T>(NekoValue* value) 
+            => (T)CreateInstance(value);
 
-        public static NekoValueType GetNekoVariant<T>()
+        public static NekoValue* CLRToPrt<T>(T value) 
+            => CLRToPrt((object)value);
+
+        public static NekoValue* CLRToPrt(object value)
         {
-            if (variants.ContainsKey(typeof(T)))
-                return variants[typeof(T)];
-            throw new TypeIsNotSupportNekoException(typeof(T).Name);
+            if (GetNekoVariant(value) == VAL_FUNCTION)
+                return ((NekoFunction) value).@ref;
+            if (GetNekoVariant(value) == VAL_STRING)
+                return Native.neko_alloc_string((string)value);
+            if (GetNekoVariant(value) == VAL_INT32)
+                return Native.neko_alloc_int32((int)value);
+            if (GetNekoVariant(value) == VAL_BOOL)
+                return Native.neko_alloc_bool((bool)value);
+            // TODO
+            throw new TypeIsNotSupportNekoException($"{value.GetType().Name}");
+        }
+        public static NekoValueType GetNekoVariant(object o)
+        {
+            if (variants.ContainsKey(o.GetType()))
+                return variants[o.GetType()];
+            throw new TypeIsNotSupportNekoException(o.GetType().Name);
         }
 
         public static Type GetCLRVariant(uint type)
@@ -44,16 +58,18 @@
             throw new TypeIsNotSupportNekoException($"{type}");
         }
 
-        public static T CreateInstance<T>(NekoValue* value)
+        public static object CreateInstance(NekoValue* value)
         {
-            if (GetNekoVariant<T>() == VAL_FUNCTION)
-                throw new Exception("TODO");
-            if (GetNekoVariant<T>() == VAL_STRING)
-                return (T)(object)NekoString.GetString(value);
-            if (value->t == (uint)VAL_INT32)
-                return (T) (object) ((int) (IntPtr) value >> 1);
-            if (value->t == (uint)VAL_INT32)
-                return (T)(object)((vint32*)(value))->i;
+            if (NekoType.get_valtype(value) == VAL_FUNCTION)
+                return new NekoFunction(NekoString.GetString(((NekoFunction.__function*) value)->env), value);
+            if (NekoType.get_valtype(value) == VAL_STRING)
+                return NekoString.GetString(value);
+            if (NekoType.get_valtype(value) == VAL_INT32)
+                return ((vint32*)value)->i;
+            if (value == Native.v_true())
+                return true;
+            if (value == Native.v_false())
+                return false;
             // TODO
             throw new TypeIsNotSupportNekoException($"{(NekoValueType)value->t}");
         }
