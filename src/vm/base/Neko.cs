@@ -25,12 +25,12 @@
 
         void INekoDisposable._release()
         {
+            Console.WriteLine($"[WARN] ~Neko() called.");
             _vm = null;
             _loader = null;
             foreach (var (name, module) in modules) 
                 (module as IDisposable).Dispose();
             Native.neko_global_free();
-            NativeLibrary.Free(Native._ref);
         }
         ~Neko() => (this as INekoDisposable)._release();
     }
