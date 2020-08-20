@@ -1,15 +1,18 @@
 ﻿namespace neko.host
 {
+    using System.IO;
     using System.Runtime.InteropServices;
     using Neko;
+    using Neko.Base;
 
     internal class Program
     {
-        public static unsafe void Main(string[] args)
+        public static void Main(string[] args)
         {
-            NativeLibrary
             using var vm = new Neko();
-            Execute(LoadModule("test.n"));
+
+            var module = vm.LoadModule(new FileInfo("test.n"));
+            NekoFunction.Create(module, "log").Invoke();
         }
     }
 }
