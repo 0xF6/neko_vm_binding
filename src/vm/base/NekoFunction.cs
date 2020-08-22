@@ -52,9 +52,10 @@
             throw new Exception();
         }
 
-        public R Invoke<R>(params object[] args) =>
-            (R)Invoke(args);
-        public object Invoke(params object[] args)
+        public R Invoke<R>(params object[] args) 
+            => NekoMarshal.PtrToCLR<R>(Invoke(args).@ref);
+
+        public NekoObject Invoke(params object[] args)
         {
             if(args.Length != ArgCount)
                 throw new InvalidArgumentNekoException();
@@ -68,7 +69,7 @@
                 3 => Native.neko_val_call3(@ref, nargs[0], nargs[1], nargs[2]),
                 _ => Native.neko_val_callN(@ref, AllocateArgs(args), args.Length)
             };
-            return NekoMarshal.PtrToCLR<object>(result);
+            return new NekoObject(result);
         }
 
         public bool IsExported() => _kind == NekoFunctionKind.Exported;
