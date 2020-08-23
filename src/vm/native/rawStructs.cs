@@ -1,35 +1,70 @@
 namespace Neko.NativeRing
 {
+    using System;
     using System.Runtime.InteropServices;
 
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
-    public unsafe struct hcell
+    public unsafe struct _neko_cell
     {
         public int hkey;
         public NekoValue key;
         public NekoValue val;
-        public hcell* next;
+        public _neko_cell* next;
     }
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
-    public unsafe struct vhash
+    public unsafe struct _neko_hash
     {
-        public hcell** cells;
+        public _neko_cell** cells;
         public int ncells;
         public int nitems;
     }
 
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
-    public ref struct vint32
+    public struct _neko_int32
     {
         public uint t;
         public int i;
     }
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
-    public ref struct vfloat
+    public struct _neko_float
     {
         public uint t;
         public double f;
     }
+
+    public unsafe struct _neko_array
+    {
+        public uint t;
+        public NekoValue* ptr;
+    }
+
+    public unsafe struct _neko_string
+    {
+        public uint t;
+        public char c;
+    }
+
+    public unsafe struct _neko_vm
+    {
+        public IntPtr sp;
+        public IntPtr csp;
+        public NekoValue* env;
+        public NekoValue* vthis;
+        public IntPtr spmin;
+        public IntPtr spmax;
+        public IntPtr trap;
+        public void* jit_val;
+        public void* jmp_buf;
+        public int run_jit;
+        public NekoValue* exc_stack;
+        public void* print;
+        public void* print_param;
+        public void* clist;
+        public NekoValue* resolver;
+        public fixed char tmp[100];
+        public int trusted_code;
+    }
+
     public unsafe struct _neko_objcell
     {
         public int id;
