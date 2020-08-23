@@ -2,6 +2,7 @@
 {
     using System;
     using System.IO;
+    using NativeRing;
 
     public abstract class NekoException : Exception
     {
@@ -14,16 +15,22 @@
         public ModuleLoadNekoException(FileInfo file, string exception) 
             : base($"Failed load module '{file.Name}' due to '{exception}'.") { }
     }
-    public sealed class IsNotAFunctionNekoException : NekoException
+
+    public sealed unsafe class InvalidTypeNekoException : NekoException
     {
-        public IsNotAFunctionNekoException(string functionName) 
-            : base($"'{functionName}' is not a function.") { }
+        public InvalidTypeNekoException(NekoValueType target, NekoValue* value) 
+            : base($"Type '{NekoType.get_valtype(value)}' is not '{target}'") { }
     }
     public sealed class TypeIsNotSupportNekoException : NekoException
     {
         public TypeIsNotSupportNekoException(string ty) 
             : base($"'{ty}' is support type.") { }
     }
-    public sealed class IsNotArrayNekoException : NekoException { }
+
+    public sealed unsafe class NullReferenceNekoException<T> : NekoException
+    {
+        public NullReferenceNekoException(NekoValue* value) 
+            : base($"Address 0x{(IntPtr)value:X} is invalid and cannot convert to {typeof(T).Name} type.") { }
+    }
     public sealed class InvalidArgumentNekoException : NekoException { }
 }
