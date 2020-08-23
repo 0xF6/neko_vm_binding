@@ -10,6 +10,8 @@
     {
         private static IntPtr _ref;
 
+        private static NekoValue Null = new NekoValue { t = (uint)NekoValueType.VAL_NULL };
+
         internal static IntPtr libRef
         {
             get
@@ -94,7 +96,12 @@
         public static extern void neko_val_buffer(NekoBuffer* buffer, NekoValue* value);
         [DllImport("neko")]
         public static extern NekoValue* neko_buffer_to_string(NekoBuffer* buffer);
-        public static NekoValue* v_null() => (NekoValue*) NativeLibrary.GetExport(libRef, "val_null");
+
+        public static NekoValue* v_null()
+        {
+            fixed (NekoValue* p = &Null)
+                return p;
+        }
 
         public static NekoValue* v_true() => (NekoValue*) NativeLibrary.GetExport(libRef, "val_true");
 
