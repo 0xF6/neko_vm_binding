@@ -4,6 +4,7 @@
     using System.Diagnostics;
     using System.Reflection;
     using System.Runtime.InteropServices;
+    using Base;
 
     internal static unsafe class Native
     {
@@ -129,7 +130,10 @@
 
         public static NekoValue* neko_alloc_bool(bool b) => b ? v_true() : v_false();
         public static NekoValue* neko_alloc_int(int v) => (NekoValue*) (IntPtr) ((v << 1) | 1);
-        
 
+        [DllImport("neko")]
+        public static extern NekoValue* neko_alloc_array(uint size);
+        public static int neko_val_array_size(NekoArray v) 
+            => (int)((uint) NekoType.tag(v.@ref) >> 4);
     }
 }

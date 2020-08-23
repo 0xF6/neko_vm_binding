@@ -10,5 +10,10 @@
             if (!NekoType.is_function(value))
                 throw new IsNotAFunctionNekoException(name);
         }
+        public static void IsArray(NekoValue* value)
+        {
+            if (!NekoType.is_array(value))
+                throw new IsNotArrayNekoException();
+        }
     }
 }
