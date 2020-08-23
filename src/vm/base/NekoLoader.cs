@@ -1,6 +1,7 @@
 ﻿namespace Neko.Base
 {
     using System.IO;
+    using System.Linq;
     using NativeRing;
 
     public sealed unsafe class NekoLoader : NekoObject
@@ -20,12 +21,12 @@
             var a1 = Native.neko_val_id("loadmodule");
             var a2 = Native.neko_val_field(this.@ref, a1);
             var result = Native.neko_val_callEx(this.@ref, a2, args,2, ref exception);
-            if (exception == null || exception->IsNull()) 
+            if (exception == null) 
                 return new NekoModule(result);
             var b = Native.neko_alloc_buffer(null);
             Native.neko_val_buffer(b, exception);
             var raw = Native.neko_buffer_to_string(b);
-            throw new ModuleLoadNekoException(file, NekoString.GetString(raw));
+            throw new ModuleLoadNekoException(file, new NekoString(raw));
         }
     }
 }
