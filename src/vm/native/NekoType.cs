@@ -6,6 +6,8 @@
     {
         private const int NEKO_TAG_BITS = 4;
 
+
+
         public static NekoValueType tag(void* v) 
             => *(NekoValueType*)v;
         public static uint short_tag(void* v) 
@@ -26,6 +28,9 @@
             => (!is_int(v) && short_tag(v) == (uint)NekoValueType.VAL_FUNCTION);
         public static bool is_array(void* v) 
             => (!is_int(v) && short_tag(v) == (uint)NekoValueType.VAL_ARRAY);
+
+        public static bool is_null(void* v)
+            => get_valtype(v) == NekoValueType.VAL_NULL;
         public static NekoValueType get_valtype(void* v) 
             => (NekoValueType)(is_int(v) ? (uint)NekoValueType.VAL_INT : short_tag(v));
     }
