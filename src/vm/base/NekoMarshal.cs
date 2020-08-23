@@ -3,9 +3,9 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Runtime.InteropServices;
-    using System.Security;
+    using System.Text;
     using Base;
+    using extensions;
     using NativeRing;
     using static NativeRing.NekoValueType;
 
@@ -23,24 +23,45 @@
             variants.Add(typeof(NekoObject), VAL_OBJECT);
         }
 
-        public static T PtrToCLR<T>(NekoValue* value) 
-            => (T)CreateInstance(value);
+        public static T PtrToCLR<T>(NekoValue* value)
+        {
+            var result = CreateInstance(value);
+            if (result is null)
+                return default;
+            return (T)result;
+        }
+
 
         public static NekoValue* CLRToPrt<T>(T value) 
             => CLRToPrt((object)value);
 
         public static NekoValue* CLRToPrt(object value)
         {
-            if (GetNekoVariant(value) == VAL_FUNCTION)
-                return ((NekoFunction) value).@ref;
-            if (GetNekoVariant(value) == VAL_STRING)
-                return Native.neko_alloc_string((string)value);
-            if (GetNekoVariant(value) == VAL_INT32)
-                return Native.neko_alloc_int32((int)value);
-            if (GetNekoVariant(value) == VAL_BOOL)
-                return Native.neko_alloc_bool((bool)value);
-            // TODO
-            throw new TypeIsNotSupportNekoException($"{value.GetType().Name}");
+            if (value is null)
+                return Native.v_null();
+            if (value is string s)
+                return (NekoString)s;
+            if (value is float f)
+                return (NekoFloat)f;
+            if (value is double d)
+                return (NekoFloat)d;
+
+            #region numbers
+            if (value is int i32)
+                return (NekoInt32)i32;
+            if (value is short i16)
+                return (NekoInt32)i16;
+            if (value is ushort u16)
+                return (NekoInt32)u16;
+            if (value is byte u8)
+                return (NekoInt32)u8;
+            if (value is sbyte i8)
+                return (NekoInt32)i8;
+            #endregion
+           
+            if (value.GetType().IsDelegate())
+                throw new NotSupportedException($"temporary delegates not support");
+            throw new NotSupportedException($"Type {value.GetType()} is not support marshaling.");
         }
         public static NekoValueType GetNekoVariant(object o)
         {
@@ -60,12 +81,16 @@
 
         public static object CreateInstance(NekoValue* value)
         {
+            if (NekoType.is_null(value))
+                return null;
             if (NekoType.get_valtype(value) == VAL_FUNCTION)
-                return new NekoFunction(NekoString.GetString(((NekoFunction.__function*) value)->env), value);
+                return new NekoFunction("<unk>", value);
             if (NekoType.get_valtype(value) == VAL_STRING)
-                return NekoString.GetString(value);
+                return new NekoString(value);
             if (NekoType.get_valtype(value) == VAL_INT32)
-                return ((vint32*)value)->i;
+                return ((_neko_int32*)value)->i;
+            if (NekoType.get_valtype(value) == VAL_INT)
+                return (int)(IntPtr)value >> 1;
             if (value == Native.v_true())
                 return true;
             if (value == Native.v_false())
