@@ -8,8 +8,13 @@
 
 
 
-        public static NekoValueType tag(void* v) 
-            => *(NekoValueType*)v;
+        public static NekoValueType tag(void* v)
+        {
+            if (v == null)
+                return NekoValueType.VAL_NULL;
+            return *(NekoValueType*) v;
+        }
+
         public static uint short_tag(void* v) 
             => (uint)tag(v) & ((1<<NEKO_TAG_BITS) - 1);
         public static bool is_int(void* v) 
