@@ -51,11 +51,12 @@
 
         #endregion
 
+        public static NekoArray Alloc(int size) => Alloc((uint) size);
         public static NekoArray Alloc(uint size)
         {
             var narr = Native.neko_alloc_array(size);
             var darr = new NekoArray(narr);
-            for(var i=0;i<size;i++)
+            for(var i = 0; i < size; i++)
                 darr[i] = Native.v_null();
             return darr;
         }
