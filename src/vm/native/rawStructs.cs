@@ -1,4 +1,4 @@
-﻿namespace Neko.NativeRing
+namespace Neko.NativeRing
 {
     using System.Runtime.InteropServices;
 
@@ -29,5 +29,21 @@
     {
         public uint t;
         public double f;
+    }
+    public unsafe struct _neko_objcell
+    {
+        public int id;
+        public NekoValue* v;
+    }
+    public unsafe struct _neko_objtable
+    {
+        public int count;
+        public _neko_objcell *cells;
+    }
+    public unsafe struct _runtime_obj
+    {
+        public uint* t;
+        public _neko_objtable table;
+        public void* proto;
     }
 }
