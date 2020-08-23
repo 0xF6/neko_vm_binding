@@ -1,12 +1,11 @@
 ﻿namespace Neko.Base
 {
     using System;
-    using System.Linq;
     using System.Runtime.InteropServices;
     using NativeRing;
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     public delegate void static_delegate();
-    public sealed unsafe class NekoFunction : NekoObject
+    public sealed unsafe class NekoFunction : NekoObject, INativeCast<_neko_function>
     {
         private NekoFunctionKind _kind;
         public string Name { get; }
@@ -14,7 +13,7 @@
 
         public NekoFunction(string functionName, NekoValue* value) : base(value)
         {
-            NekoAssert.IsFunction(value, functionName);
+            NekoAssert.IsFunction(value);
             Name = functionName;
             ArgCount = AsInternal()->nargs;
             _kind = NekoFunctionKind.Imported;
@@ -33,11 +32,7 @@
             var field = Native.neko_val_field(module, Native.neko_val_id(functionName));
             return new NekoFunction(functionName, field);
         }
-
-        public static string GetName(NekoValue* function) 
-            => NekoString.GetString(((__function*) function)->env);
-
-        public NekoValue* Invoke()
+        public NekoObject Invoke()
         {
             if (0 != ArgCount)
                 throw new Exception();
@@ -69,7 +64,7 @@
                 3 => Native.neko_val_call3(@ref, nargs[0], nargs[1], nargs[2]),
                 _ => Native.neko_val_callN(@ref, AllocateArgs(args), args.Length)
             };
-            return new NekoObject(result);
+            return result;
         }
 
         public bool IsExported() => _kind == NekoFunctionKind.Exported;
@@ -84,14 +79,7 @@
         }
 
 
-        internal __function* AsInternal() => (__function*) @ref;
-        internal struct __function
-        {
-            public uint t;
-            public int nargs;
-            public void* addr;
-            public NekoValue* env;
-            public void* module;
-        }
+        public _neko_function* AsInternal() => (_neko_function*) @ref;
+        
     }
 }

@@ -43,6 +43,14 @@ namespace Neko.NativeRing
         public uint t;
         public char c;
     }
+    public unsafe struct _neko_function
+    {
+        public uint t;
+        public int nargs;
+        public void* addr;
+        public NekoValue* env;
+        public void* module;
+    }
 
     public unsafe struct _neko_vm
     {
