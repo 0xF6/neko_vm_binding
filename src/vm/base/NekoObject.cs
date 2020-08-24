@@ -11,6 +11,8 @@
         {
             if (NekoType.is_null(value))
                 return new NekoNull(value);
+            if (NekoType.is_int(value))
+                return (NekoInt32)((IntPtr)value).ToInt32();
             if (NekoType.is_string(value))
                 return new NekoString(value);
             if (NekoType.is_float(value))
@@ -23,6 +25,8 @@
                 return new NekoInt32(value);
             if (NekoType.is_object(value))
                 return new NekoRuntimeObject(value);
+            if (NekoType.is_boolean(value))
+                return new NekoBool(value);
             return new NekoObject(value);
         }
 
