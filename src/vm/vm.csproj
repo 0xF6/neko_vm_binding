@@ -28,7 +28,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Update="test.n">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
   <ItemGroup>
