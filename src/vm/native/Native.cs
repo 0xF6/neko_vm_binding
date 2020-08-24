@@ -102,10 +102,12 @@
             fixed (NekoValue* p = &Null)
                 return p;
         }
-
-        public static NekoValue* v_true() => (NekoValue*) NativeLibrary.GetExport(libRef, "val_true");
-
-        public static NekoValue* v_false() => (NekoValue*) NativeLibrary.GetExport(libRef, "val_false");
+        // ((addr*){"val_true"}) + 0x6 - wtf
+        public static NekoValue* v_true() => 
+            (NekoValue*) NativeLibrary.GetExport((IntPtr)(void*)libRef, "val_true") + 0x6;
+        // ((addr*){"val_false"}) + 0x5 - wtf
+        public static NekoValue* v_false() => 
+            (NekoValue*) NativeLibrary.GetExport((IntPtr)(void*)libRef, "val_false") + 0x5;
 
 
         [DllImport("neko")]
