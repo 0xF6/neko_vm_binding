@@ -33,6 +33,8 @@
             => (!is_int(v) && short_tag(v) == (uint)NekoValueType.VAL_FUNCTION);
         public static bool is_array(void* v) 
             => (!is_int(v) && short_tag(v) == (uint)NekoValueType.VAL_ARRAY);
+        public static bool is_boolean(void* v) 
+            => (tag(v) == NekoValueType.VAL_BOOL);
 
         public static bool is_null(void* v)
             => get_valtype(v) == NekoValueType.VAL_NULL;
