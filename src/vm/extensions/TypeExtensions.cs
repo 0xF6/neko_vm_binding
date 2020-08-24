@@ -5,7 +5,16 @@
     public static class TypeExtensions
     {
         // wtf
-        public static bool IsDelegate(this Type t) 
-            => t.GetMethod("Invoke") != null;
+        public static bool IsDelegate(this Type t)
+        {
+            try
+            {
+                return t.GetMethod("Invoke") != null;
+            }
+            catch
+            {
+                return false;
+            }
+        }
     }
 }
