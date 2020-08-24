@@ -1,4 +1,4 @@
-﻿namespace Neko
+namespace Neko
 {
     using System;
     using System.Collections.Generic;
@@ -63,7 +63,7 @@
                 return (NekoInt32)i8;
             #endregion
            
-            if (value.GetType().IsDelegate())
+            if (value is Delegate)
                 throw new NotSupportedException($"temporary delegates not support");
             throw new NotSupportedException($"Type {value.GetType()} is not support marshaling.");
         }
