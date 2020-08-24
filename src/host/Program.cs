@@ -2,7 +2,9 @@
 {
     using System;
     using System.IO;
+    using System.Linq;
     using System.Reflection;
+    using System.Runtime.CompilerServices;
     using System.Threading;
     using Neko.Base;
     using Neko.NativeRing;
@@ -18,7 +20,23 @@
             using var vm = new Neko();
             var module = vm.LoadModule(new FileInfo("test.n"));
 
-            var xuy = NekoArray.Alloc(3);
+            var xuy = (NekoArray)module["dws"].Invoke();
+
+
+            module["assert_boolean"].InvokeWithNative(Native.v_true());
+            module["assert_boolean"].InvokeWithNative(Native.v_false());
+
+            var ftrue = module["assert_boolean_true"].Invoke();
+            var ffalse = module["assert_boolean_false"].Invoke();
+
+            var allc = NekoArray.Alloc(3);
+            var allc2 = allc.AsInternal();
+
+            var ffe1 = ftrue.@ref == Native.v_true();
+            var ffe2 = ffalse.@ref == Native.v_false();
+
+            module["test_array2"].InvokeWithNative(xuy.@ref);
+
             var xuy2 = xuy.AsInternal();
 
             var qw = xuy.GetByIndexNative(0);
@@ -31,7 +49,10 @@
             var d2 = module["new_obj"].Invoke();
             if (d2 is NekoRuntimeObject obj)
             {
-                var s = obj.GetFields();
+                var a = obj.AsDynamic();
+                var strw = a.msg;
+
+                var xu2y = obj.GetFields();
             }
 
 
