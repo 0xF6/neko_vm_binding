@@ -43,5 +43,11 @@
             if (!NekoType.is_object(value))
                 throw new InvalidTypeNekoException(VAL_OBJECT, value);
         }
+
+        public static void IsBool(NekoValue* value)
+        {
+            if (!NekoType.is_boolean(value))
+                throw new InvalidTypeNekoException(VAL_BOOL, value);
+        }
     }
 }
