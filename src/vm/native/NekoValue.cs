@@ -8,21 +8,24 @@
         public uint t;
         public NekoValueType GetValueType()
         {
-            if (NekoType.is_function(Unsafe.AsPointer(ref this)))
-                return VAL_FUNCTION;
-            if (NekoType.is_array(Unsafe.AsPointer(ref this)))
-                return VAL_ARRAY;
-            if (NekoType.is_int(Unsafe.AsPointer(ref this)))
-                return VAL_INT;
-            if (NekoType.is_float(Unsafe.AsPointer(ref this)))
-                return VAL_FLOAT;
-            if (NekoType.is_int32(Unsafe.AsPointer(ref this)))
-                return VAL_INT32;
-            if (NekoType.is_object(Unsafe.AsPointer(ref this)))
-                return VAL_OBJECT;
-            if (NekoType.is_string(Unsafe.AsPointer(ref this)))
-                return VAL_STRING;
-            return NekoType.get_valtype(Unsafe.AsPointer(ref this));
+            fixed (NekoValue* p = &this)
+            {
+                if (NekoType.is_function(p))
+                    return VAL_FUNCTION;
+                if (NekoType.is_array(p))
+                    return VAL_ARRAY;
+                if (NekoType.is_int(p))
+                    return VAL_INT;
+                if (NekoType.is_float(p))
+                    return VAL_FLOAT;
+                if (NekoType.is_int32(p))
+                    return VAL_INT32;
+                if (NekoType.is_object(p))
+                    return VAL_OBJECT;
+                return NekoType.is_string(p) ? 
+                    VAL_STRING : 
+                    NekoType.get_valtype(p);
+            }
         }
     }
 }
