@@ -1,4 +1,4 @@
-namespace Neko
+﻿namespace Neko
 {
     using System;
     using System.Collections.Generic;
@@ -49,6 +49,8 @@ namespace Neko
                 return (NekoBool) b;
             if (value is NekoFunction fn)
                 return fn.@ref;
+            if (value is NekoArray ar)
+                return ar.@ref;
 
             #region numbers
             if (value is int i32)
