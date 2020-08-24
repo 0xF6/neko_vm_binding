@@ -9,7 +9,6 @@
             => NekoAssert.IsInt32(value);
         public _neko_int32* AsInternal() => (_neko_int32*) @ref;
 
-        public int GetValue() => this;
 
         public static implicit operator int(NekoInt32 i)
         {
@@ -20,5 +19,7 @@
 
         public static implicit operator NekoInt32(int i) => 
             new NekoInt32(Native.neko_alloc_int32(i));
+
+        public int Value => this;
     }
 }

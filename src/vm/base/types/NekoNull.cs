@@ -23,5 +23,7 @@
         public static bool operator !=(NekoNull left, NekoNull right) => !Equals(left, right);
 
         #endregion
+
+        public object Value => null;
     }
 }
