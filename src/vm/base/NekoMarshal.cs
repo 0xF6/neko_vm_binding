@@ -45,6 +45,10 @@
                 return (NekoFloat)f;
             if (value is double d)
                 return (NekoFloat)d;
+            if (value is bool b)
+                return (NekoBool) b;
+            if (value is NekoFunction fn)
+                return fn.@ref;
 
             #region numbers
             if (value is int i32)
