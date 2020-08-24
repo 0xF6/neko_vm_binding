@@ -3,6 +3,10 @@
     using System;
     using System.Runtime.InteropServices;
     using NativeRing;
+
+    public delegate NekoObject Invoke0();
+    public delegate NekoObject InvokeN(params NekoObject[] objs);
+
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     public delegate void static_delegate();
     public sealed unsafe class NekoFunction : NekoObject, INativeCast<_neko_function>
@@ -78,8 +82,10 @@
             return newArgs;
         }
 
+        public static implicit operator Invoke0(NekoFunction fun) => fun.Invoke;
+        public static implicit operator InvokeN(NekoFunction fun) => fun.Invoke;
+
 
         public _neko_function* AsInternal() => (_neko_function*) @ref;
-        
     }
 }
