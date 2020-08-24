@@ -4,6 +4,9 @@
 
     public sealed unsafe class NekoBool : NekoObject
     {
+        public static readonly NekoBool True = new NekoBool(Native.v_true());
+        public static readonly NekoBool False = new NekoBool(Native.v_false());
+
         internal NekoBool(NekoValue* value) : base(value) => NekoAssert.IsBool(value);
 
 
