@@ -4,6 +4,7 @@ namespace vm_base_test
     using System.IO;
     using System.Linq;
     using Neko.Base;
+    using Neko.NativeRing;
     using NUnit.Framework;
 
     public class VMTests
@@ -36,11 +37,13 @@ namespace vm_base_test
             Assert.AreEqual(3, robj.GetFields().Length);
         }
         [Test]
-        public void TestFields()
+        public unsafe void TestFields()
         {
             var robj = module["testObject"].Invoke() as NekoRuntimeObject;
             Assert.NotNull(robj);
-            Assert.AreEqual(new[]{"x","y", "text", "fn"}, robj.GetFields());
+            Assert.AreEqual(
+                new[]{"x","y", "text", "fn"}.OrderBy(x => x),
+                robj.GetFields().OrderBy(x => x));
         }
         [Test]
         public void TestObjectValueInt()
