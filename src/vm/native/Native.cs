@@ -136,6 +136,9 @@
         [DllImport("neko")]
         public static extern NekoValue* neko_alloc_int32(int v);
 
+        public static NekoValue* neko_alloc_int31(int v) 
+            => ((NekoValue*) (IntPtr) ((((int) (v)) << 1) | 1));
+
 
         public static NekoValue* neko_alloc_bool(bool b) => b ? v_true() : v_false();
         public static NekoValue* neko_alloc_int(int v) => (NekoValue*) (IntPtr) ((v << 1) | 1);
