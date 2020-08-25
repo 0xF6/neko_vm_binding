@@ -3,7 +3,6 @@
     using System;
     using System.Collections;
     using System.Collections.Generic;
-    using System.Linq;
     using NativeRing;
     
     public unsafe class NekoArray : NekoObject, IEnumerable<NekoObject>, INativeCast<_neko_array>, ICollection
@@ -19,10 +18,10 @@
             => GetByIndexNative(index);
         public void SetByIndex(int index, NekoObject value) 
             => SetByIndexNative(index, value.@ref);
-        public NekoValue* GetByIndexNative(int index) 
-            => (NekoObject)(&((_neko_array*) @ref)->ptr[index * sizeof(short)]);
         public void SetByIndexNative(int index, NekoValue* value) 
-            => ((void**) &((_neko_array*) @ref)->ptr)[index * sizeof(short)] = value;
+            => (&((_neko_array*) @ref)->ptr)[index] = value;
+        public NekoValue* GetByIndexNative(int index)
+            => (&((_neko_array*) @ref)->ptr)[index];
 
         public _neko_array* AsInternal() 
             => (_neko_array*)@ref;
