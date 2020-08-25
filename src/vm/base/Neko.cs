@@ -3,9 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.IO;
-    using System.Runtime.InteropServices;
     using System.Threading;
-    using extensions;
     using NativeRing;
 
     public unsafe class Neko : INekoDisposable, INativeCast<_neko_vm>
