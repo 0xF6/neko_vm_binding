@@ -1,4 +1,4 @@
-﻿namespace Neko.Base
+namespace Neko.Base
 {
     using System;
     using System.Collections;
@@ -25,7 +25,7 @@
 
         public string[] GetFields() =>
             (..AsInternal()->table.count)
-            .ForEach(x => *&((_runtime_obj*) @ref)->table.cells[x * sizeof(short)])
+            .ForEach(x => *&((_runtime_obj*) @ref)->table.cells[x])
             .Select(x => (NekoObject)Native.neko_val_field_name(x.id))
             .Cast<NekoString>()
             .Select(x => x.Value)
