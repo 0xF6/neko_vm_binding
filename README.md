@@ -30,12 +30,52 @@
 
 ## 🧬 Roadmap
 
-- [ ] Mercury
 - [ ] Documentation
 - [ ] Improved API
-- [x] Marshaling default types
-- [ ] Landing page
-- Personal account
-    - Authorization
-    - Connect your spotify account
-    - Getting the anthem by token
+- [x] Marshaling default types (without `vabstract` and `vkind`)
+- [ ] Marshaling POCO object
+- [ ] Marshaling neko std types
+- [ ] Marshaling non-primitive .NET types
+- [ ] More tests
+- [ ] Improved Thread support
+
+
+### 💫 Fast start
+
+```csharp
+using var vm = new Neko();
+```
+
+### Load *.n modules
+
+```csharp
+var module = vm.LoadModule(new FileInfo("module.n"));
+```
+
+
+### Get exports from module
+
+
+```haxe
+// module.n
+$exports.GetInt = function() {
+    return 42;
+}
+```
+
+```csharp
+using var vm = new Neko();
+var module = vm.LoadModule(new FileInfo("module.n"));
+Console.WriteLine(module[GetInt].Invoke()); // NekoInt32 { Value: 42 }
+```
+
+
+### Threading
+
+Each time you are going to use a VM API outside of the thread in which it was created, use the following code
+
+```csharp
+vm.GuardBarrier()
+```
+
+Also, `vm.ThreadID` id managed thread in which it was created (see `Thread.CurrentThread.ManagedThreadId`)
