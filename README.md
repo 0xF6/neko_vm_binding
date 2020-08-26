@@ -66,7 +66,7 @@ $exports.GetInt = function() {
 ```csharp
 using var vm = new Neko();
 var module = vm.LoadModule(new FileInfo("module.n"));
-Console.WriteLine(module[GetInt].Invoke()); // NekoInt32 { Value: 42 }
+Console.WriteLine(module["GetInt"].Invoke()); // NekoInt32 { Value: 42 }
 ```
 
 
