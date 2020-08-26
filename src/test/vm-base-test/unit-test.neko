@@ -1,0 +1,77 @@
+$exports.testObject = function() {
+    x => 0,
+    y => -1,
+    text => "the text",
+    fn => function() {return 42;}
+};
+$exports.setget_int = function(i) {
+    $print(i);
+    $print("\n");
+    if($typeof(i) != $tint){
+        $print("setget_int FAIL");
+        $print("\n");
+        return;
+    }
+    return i;
+}
+$exports.setget_float = function(i) {
+    $print(i);
+    $print("\n");
+    if($typeof(i) != $tfloat){
+        $print("setget_float FAIL");
+        $print("\n");
+        return;
+    }
+    return i;
+}
+$exports.setget_string = function(i) {
+    $print(i);
+    $print("\n");
+    if($typeof(i) != $tstring){
+        $print("setget_string FAIL");
+        $print("\n");
+        return;
+    }
+    return i;
+}
+$exports.setget_boolean = function(i) {
+    $print(i);
+    $print("\n");
+    if($typeof(i) != $tbool){
+        $print("setget_boolean FAIL");
+        $print("\n");
+        return;
+    }
+    return i;
+}
+$exports.getset_and_call_function = function(i) {
+    $print(i);
+    $print("\n");
+    if($typeof(i) != $tfunction){
+        $print("getset_and_call_function FAIL");
+        $print("\n");
+        return;
+    }
+    i();
+    return i;
+}
+$exports.setget_array = function(i) {
+    $print(i);
+    $print("\n");
+    if($typeof(i) != $tarray){
+        $print("setget_array FAIL");
+        $print("\n");
+        return;
+    }
+    return i;
+}
+$exports.new_array_empty = function(i){
+    var q = $amake(i);
+    q = $array();
+    return $amake(i);
+}
+$exports.new_array = function(){
+    var a = $amake(4);
+    a = $array("1",2.12,"test",true);
+    return a;
+}
