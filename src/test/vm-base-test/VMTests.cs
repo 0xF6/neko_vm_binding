@@ -1,4 +1,4 @@
-namespace vm_base_test
+﻿namespace vm_base_test
 {
     using System;
     using System.IO;
@@ -34,7 +34,7 @@ namespace vm_base_test
         {
             var robj = module["testObject"].Invoke() as NekoRuntimeObject;
             Assert.NotNull(robj);
-            Assert.AreEqual(3, robj.GetFields().Length);
+            Assert.AreEqual(4, robj.GetFields().Length);
         }
         [Test]
         public unsafe void TestFields()
@@ -46,11 +46,11 @@ namespace vm_base_test
                 robj.GetFields().OrderBy(x => x));
         }
         [Test]
-        public void TestObjectValueInt()
+        public unsafe void TestObjectValueInt()
         {
             var robj = module["testObject"].Invoke() as NekoRuntimeObject;
             Assert.NotNull(robj);
-            Assert.AreEqual(0, (int)robj.AsDynamic().x);
+            Assert.AreEqual(-1, (int)robj.AsDynamic().y);
         }
         [Test]
         public void TestObjectValueString()
