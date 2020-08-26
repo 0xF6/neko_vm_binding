@@ -3,9 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Text;
     using Base;
-    using extensions;
     using NativeRing;
     using static NativeRing.NekoValueType;
 
