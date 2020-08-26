@@ -1,11 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
+    <OutputType>Library</OutputType>
     <TargetFramework>net5.0</TargetFramework>
     <RootNamespace>Neko</RootNamespace>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PlatformTarget>x64</PlatformTarget>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <LangVersion>preview</LangVersion>
+    <Version>1.0.11</Version>
   </PropertyGroup>
   <ItemGroup>
     <None Update="runtimes\**" CopyToOutputDirectory="PreserveNewest" />
@@ -26,15 +28,29 @@
     <Content CopyToOutputDirectory="PreserveNewest" Include="runtimes/osx-x64/native/std.ndll" Pack="true" PackagePath="runtimes/osx-x64/native/std.ndll" />
     <Content CopyToOutputDirectory="PreserveNewest" Include="runtimes/win-x64/native/std.ndll" Pack="true" PackagePath="runtimes/win-x64/native/std.ndll" />
   </ItemGroup>
-  <ItemGroup>
-    <None Update="test.n">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
-      <_Parameter1>host</_Parameter1>
-    </AssemblyAttribute>
-  </ItemGroup>
-</Project>
 
+  <PropertyGroup>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <PackageTags>neko, vm, nekovm, haxe, haxevm, bindings</PackageTags>
+    <Description>C# Bindings for NekoVM</Description>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/0xF6/neko_vm_binding</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/0xF6/neko_vm_binding</PackageProjectUrl>
+
+    <Authors>Yuuki Wesp</Authors>
+    <Company>Yuuki Wesp</Company>
+    <Product>NekoVM Bindings</Product>
+  </PropertyGroup>
+
+
+  <ItemGroup Condition="$(Configuration) == 'Debug'">
+    <PackageReference Include="Ivy.Versioning" Version="3.1.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+  <PropertyGroup Condition="$(Configuration) == 'Debug'">
+    <BumpPatch>true</BumpPatch>
+  </PropertyGroup>
+</Project>
