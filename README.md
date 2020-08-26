@@ -1,1 +1,1 @@
-![NekoVM](https://cloud.githubusercontent.com/assets/576184/14234981/10528a0e-f9f1-11e5-8922-894569b2feea.png)
+![NekoVM](https://user-images.githubusercontent.com/13326808/91330033-927bf600-e7d1-11ea-81a3-18be0ca9a065.png)
