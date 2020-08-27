@@ -41,8 +41,8 @@
 - [ ] Remove binaries from repo (automatization build for this)
 - [x] dotnet global tools neko compiler
     - [x] win-x64
-    - [ ] osx-x64 (need help)
-    - [x] linux-x64
+    - [ ] osx-x64 (need help with testing)
+    - [ ] linux-x64 (need help with tar\chmod logic)
 
 ### 💫 Fast start
 
@@ -83,3 +83,10 @@ vm.GuardBarrier()
 ```
 
 Also, `vm.ThreadID` id managed thread in which it was created (see `Thread.CurrentThread.ManagedThreadId`)
+
+
+### Install compiler
+
+```poweshell
+dotnet tool install --global dotnet-nekoc --version 2.3.0-preview.2
+```
