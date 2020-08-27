@@ -38,7 +38,11 @@
 - [ ] Marshaling non-primitive .NET types
 - [ ] More tests
 - [ ] Improved Thread support
-
+- [ ] Remove binaries from repo (automatization build for this)
+- [x] dotnet global tools neko compiler
+    - [x] win-x64
+    - [ ] osx-x64 (need help)
+    - [x] linux-x64
 
 ### 💫 Fast start
 
