@@ -10,7 +10,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="resources\bin\linux-x64\" />
+    <EmbeddedResource Include="resources\binaries\linux-x64\nekoc" />
+    <EmbeddedResource Include="resources\binaries\osx-x64\nekoc" />
+    <EmbeddedResource Include="resources\binaries\win-x64\nekoc.exe" />
   </ItemGroup>
 
 </Project>
