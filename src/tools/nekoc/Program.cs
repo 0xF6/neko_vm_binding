@@ -1,10 +1,16 @@
 ﻿namespace nekoc
 {
     using System;
+    using System.Diagnostics;
+    using System.Drawing;
     using System.IO;
+    using System.Linq;
     using System.Reflection;
     using System.Runtime.InteropServices;
+    using System.Text;
     using System.Threading.Tasks;
+    using Pastel;
+    using static System.Console;
     using static System.Environment;
     using static System.Environment.SpecialFolder;
     using static System.IO.Path;
@@ -16,7 +22,7 @@
 
         public static string GetPathCompilerForCurrentOS()
         {
-            var result = $"{AssemblyKey}.{CompilersFolder}.{GetOS()}-x64.nekoc";
+            var result = $"{AssemblyKey}.{CompilersFolder}.{GetOS()}_x64.nekoc";
             if (GetOS() == "win")
                 result = $"{result}.exe";
             return result;
@@ -45,7 +51,7 @@
                 .InformationalVersion ?? "any";
 
         public static DirectoryInfo GetFolderForCache() =>
-            new(Combine(GetFolderPath(ApplicationData), GetVersion()));
+            new(Combine(Combine(GetFolderPath(ApplicationData), "dotnet-nekoc-cache"), GetVersion()));
 
         public static FileInfo GetCompilerBinariesFile()
         {
@@ -57,6 +63,17 @@
 
         public static async Task<FileInfo> GetOrCreateCompilerAsync()
         {
+            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                OutputEncoding = Encoding.Unicode;
+
+            PrintHeader();
+            if (GetOS() != "osx")
+            {
+                WriteLine($"Please note that the tool may not work correctly under the OSX operating system.".Pastel(Color.Orange));
+                WriteLine($"If you find a problem, report it to the repository.".Pastel(Color.Orange));
+            }
+
             var result = GetCompilerBinariesFile();
 
             if (result.Exists)
@@ -70,14 +87,40 @@
             return result;
         }
 
-        public static async Task Main(string[] args)
+        private static void PrintHeader()
+        {
+            if (GetEnvironmentVariable("WT_SESSION") == null && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                SetEnvironmentVariable($"NO_COLOR", "true");
+                return;
+            }
+            WriteLine($"⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿\r\n⣿⣿⣿⠈⠻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠋⢹⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿\r\n⣿⣿⣿⡀⢳⣤⡙⠻⢿⣿⣿⣿⠿⢿⣿⣿⠿⢿⣿⣿⣿⠿⠛⣡⣴⠇⣼⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿\r\n⣿⣿⣿⣧⠸⡀⡙⢶⣤⣈⣁⣤⣤⠀⠹⠃⢴⣶⣤⣭⣤⡶⢋⡁⡜⢠⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿\r\n⣿⣿⣿⣿⣆⢻⡼⣷⡍⠉⠁⠀⣹⣆⠀⢀⣿⡁⠀⠉⠉⣴⡏⣼⢃⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿\r\n⣿⣿⣿⣿⡿⢀⠇⠉⠀⠀⠀⠘⠛⢻⣦⡾⠛⠋⠀⠀⠀⠈⠁⣧⠸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿\r\n⣿⣿⣿⡿⢁⡞⠀⠀⣴⡶⠦⣄⡀⠿⣿⡿⠂⣠⠴⠶⣶⡀⠀⠸⣧⢹⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿\r\n⣿⣿⣿⠃⣼⢀⣤⣶⣿⣿⣶⣶⣿⣶⣿⣷⣿⣷⣶⣾⣿⣶⣤⡀⢹⡆⢿⣿⣿⣿⣿⣿⣿⡿⠿⣿⣿⣿⡿⢿⣿⣿⡿⠿⠿⠿⠿⠿⣿⣿⣿⠿⣿⣿⣿⠿⢿⣿⣿⡿⠿⠿⠿⠿⠿⣿⣿⣿⣿⣿\r\n⣿⣿⣿⢰⠃⣠⣿⣿⠿⠿⠟⠿⢿⡇⠀⠀⣹⠿⠛⠛⠻⠿⢿⣇⠈⢷⢸⣿⣿⣿⣿⣿⣿⡇⢠⣄⠙⢿⡇⢸⣿⣿⡗⠒⠒⠒⠒⠒⣿⣿⣿⠀⠛⠛⠃⠐⢻⣿⣿⡇⢰⣶⣶⣶⠀⣿⣿⣿⣿⣿\r\n⣿⣿⡏⢸⡾⠛⢉⣤⣤⣄⠀⠶⠿⠟⠀⠘⠛⠿⠶⢀⣤⣤⣀⠈⠳⣾⠀⣿⣿⣿⣿⣿⣿⣇⣸⣿⣷⣤⣀⣸⣿⣿⣏⣉⣉⣉⣉⣉⣿⣿⣿⣀⣿⣿⣿⣇⣸⣿⣿⣇⣈⣉⣉⣉⣀⣿⣿⣿⣿⣿\r\n⣿⣿⡇⠈⠀⣼⠟⠿⣿⣿⣿⣶⠀⢰⠀⢠⡆⢰⣾⣿⣿⡿⠟⢿⣆⠈⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿\r\n⣿⣿⣇⠀⢰⣏⣴⡾⠟⠛⠛⠛⣇⢸⣿⣿⢇⡟⠛⠛⠛⠿⢷⣄⣿⠀⢀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿\r\n⣿⣿⣿⣧⠀⠟⠁⣤⣾⣿⣿⣧⠸⣾⣭⣽⣾⢠⣿⣿⣿⣶⣄⠙⠏⢠⣼⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿\r\n⣿⣿⣿⣿⣧⠀⣾⣿⣿⣿⣿⣿⣆⠙⠿⠿⢃⣼⣿⣿⣿⣿⣿⡆⢠⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿\r\n⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿\r\n⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿"
+                .Pastel(Color.MediumPurple));
+            WriteLine();
+        }
+
+        public static async Task<int> Main(string[] args)
         {
             var result = await GetOrCreateCompilerAsync();
 
-            Console.WriteLine($"Hello, {result.FullName}");
-            Console.WriteLine($"{string.Join(' ', args)}");
-            Console.WriteLine($"CurrentDirectory: {Directory.GetCurrentDirectory()}");
-            Console.WriteLine($"ExecDirectory: {Assembly.GetEntryAssembly().Location}");
+            if (args is { Length: 0 })
+                return await HelpAsync(result);
+            return await ExecAsync(result, args.Concat(new []{ "-v" }).ToArray());
+        }
+
+        private static Task<int> HelpAsync(FileInfo compiler) =>
+            ExecAsync(compiler, "--help", "-v");
+
+        public static async Task<int> ExecAsync(FileInfo compiler, params string[] args)
+        {
+            var inf = new ProcessStartInfo(compiler.FullName, string.Join(' ', args));
+            inf.WorkingDirectory = Directory.GetCurrentDirectory();
+            var proc = Process.Start(inf);
+            await proc.WaitForExitAsync();
+
+            if (proc.ExitCode == 0)
+                WriteLine($"Success.".Pastel(Color.GreenYellow));
+            return proc.ExitCode;
         }
     }
 }
