@@ -6,7 +6,7 @@
     <PackAsTool>true</PackAsTool>
     <ToolCommandName>nekoc</ToolCommandName>
     <PackageOutputPath>./nupkg</PackageOutputPath>
-    <Version>2.3.0-preview.2</Version>
+    <Version>2.3.0-preview.3</Version>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/0xF6/neko_vm_binding</PackageProjectUrl>
@@ -25,12 +25,6 @@
     <Compile Remove="nupkg\**" />
     <EmbeddedResource Remove="nupkg\**" />
     <None Remove="nupkg\**" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Include="resources\binaries\linux-x64\nekoc" />
-    <EmbeddedResource Include="resources\binaries\osx-x64\nekoc" />
-    <EmbeddedResource Include="resources\binaries\win-x64\nekoc.exe" />
   </ItemGroup>
 
   <ItemGroup>
