@@ -22,12 +22,25 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="nupkg\**" />
+    <EmbeddedResource Remove="nupkg\**" />
+    <None Remove="nupkg\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <EmbeddedResource Include="resources\binaries\linux-x64\nekoc" />
     <EmbeddedResource Include="resources\binaries\osx-x64\nekoc" />
     <EmbeddedResource Include="resources\binaries\win-x64\nekoc.exe" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="EmojiOne.NETStandard" Version="4.0.1" />
+    <PackageReference Include="Flurl.Http" Version="2.4.2" />
+    <PackageReference Include="Goblinfactory.Konsole" Version="6.2.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="5.0.0-preview.8.20407.11" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="5.0.0-preview.8.20407.11" />
+    <PackageReference Include="morelinq" Version="3.3.2" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     <PackageReference Include="Pastel" Version="1.3.2" />
   </ItemGroup>
 
