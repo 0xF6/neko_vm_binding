@@ -22,12 +22,8 @@
             _version = version;
         }
 
-        public string GetFile()
-        {
-            if (AppState.GetOS() == "win")
-                return $"neko-{_version}-{AppState.GetOS()}64.zip";
-            return $"neko-{_version}-{AppState.GetOS()}64.tar.gz";
-        }
+        public string GetFile() 
+            => $"neko-{_version}-{AppState.GetOS()}64.{(AppState.GetOS() == "win" ? "zip" : "tar.gz")}";
 
         public async ValueTask<FileInfo> DownloadAsync()
         {
@@ -38,7 +34,7 @@
             var targetFile = GetFile();
 
             var asset = release.Assets.FirstOrDefault(x => x.Name == targetFile);
-
+            
             if(asset is null)
                 throw new Exception($"Failed find {targetFile} in latest release in '{_owner}/{_repo}'");
 
