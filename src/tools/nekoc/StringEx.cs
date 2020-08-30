@@ -4,11 +4,9 @@
 
     public static class StringEx
     {
-        public static string Emoji(this string str)
-        {
-            if (Environment.GetEnvironmentVariable("EMOJI_USE") == "0")
-                return "";
-            return EmojiOne.EmojiOne.ShortnameToUnicode(str);
-        }
+        public static string Emoji(this string str) =>
+            Environment.GetEnvironmentVariable("EMOJI_USE") == "0"
+                ? ""
+                : EmojiOne.EmojiOne.ShortnameToUnicode(str);
     }
 }
