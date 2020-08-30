@@ -1,12 +1,11 @@
-﻿using Flurl.Http;
-
-namespace nekoc
+﻿namespace nekoc
 {
     using System;
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
     using System.Threading.Tasks;
+    using Flurl.Http;
     using Konsole;
     using Newtonsoft.Json;
 

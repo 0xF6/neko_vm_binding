@@ -17,7 +17,7 @@
 
 
         public static DirectoryInfo GetFolderForCache() =>
-            new(Combine(Combine(GetFolderPath(ApplicationData), "dotnet-nekoc-cache"), GetVersion()));
+            new(Combine(GetFolderPath(ApplicationData), "dotnet-nekoc-cache", GetVersion()));
 
         public static string GetOS()
         {
