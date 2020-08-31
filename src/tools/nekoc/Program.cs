@@ -79,8 +79,16 @@ public static class Input
             }
             trace($"not exists... download from github...");
             var zip = await new GithubClient("HaxeFoundation", "neko", NEKO_C_VERSION).DownloadAsync();
-            if (GetOS() == "win")
-                extractor = (s) => ZipFile.ExtractToDirectory(zip.FullName, s);
+            if (GetOS() == "win") extractor = (s) =>
+            {
+                trace($"extraction '{zip.FullName}' archive...");
+                ZipFile.ExtractToDirectory(zip.FullName, s);
+                var dir = zip.FullName.Replace(".zip", "").AsDirectoryInfo();
+                dir.EnumerateFiles()
+                    .Pipe(x => File.Move(x.FullName, Combine(s, GetFileName(x.FullName)), true))
+                    .Pipe(x => trace($"move '{x}'"))
+                    .Consume();
+            };
             else extractor = (s) =>
             {
                 using var file = File.OpenRead(zip.FullName);
