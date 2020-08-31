@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Pastel;
 using System.IO.Compression;
+using Mono.Unix.Native;
 using MoreLinq;
 using nekoc;
 using SharpCompress.Archives.Tar;
@@ -38,8 +39,8 @@ public static class Input
 
         if (GetOS() == "osx")
         {
-            WriteLine($"Please note that the tool may not work correctly under the OSX operating system.".Pastel(Color.Orange));
-            WriteLine($"If you find a problem, report it to the repository.".Pastel(Color.Orange));
+            warn($"Please note that the tool may not work correctly under the OSX operating system.".Pastel(Color.Orange));
+            warn($"If you find a problem, report it to the repository.".Pastel(Color.Orange));
         }
 
         var compilerFile = await GetOrCreateCompilerAsync();
@@ -63,9 +64,11 @@ public static class Input
 
         async Task<FileInfo> GetOrCreateCompilerAsync()
         {
+            var extractor = default(Action<string>);
             var cache = GetFolderForCache();
             if (forceInstall && cache.Exists)
             {
+                warn($"forceInstall && cache.Exists");
                 cache.EnumerateFiles("*.*").Pipe(x => x.Delete()).Pipe(x => trace($"delete '{x}'..")).Consume();
                 cache.EnumerateDirectories().Pipe(x => x.Delete()).Pipe(x => trace($"delete '{x}'..")).Consume();
             }
@@ -73,7 +76,7 @@ public static class Input
 
             if (c_binary.Exists)
                 return c_binary;
-            Action<string> extractor = null;
+            
             var zip = await new GithubClient("HaxeFoundation", "neko", NEKO_C_VERSION).DownloadAsync();
             if (GetOS() == "win")
                 extractor = (s) => ZipFile.ExtractToDirectory(zip.FullName, s);
@@ -82,13 +85,18 @@ public static class Input
                 using var file = File.OpenRead(zip.FullName);
                 using var tar = TarArchive.Open(file);
                 using var reader = tar.ExtractAllEntries();
+                trace($"extraction '{zip.FullName}' archive...");
                 reader.WriteAllToDirectory(s);
 
                 // Could not write symlink
                 // for more information please see https://github.com/dotnet/runtime/issues/24271
+                trace($"create 'libneko.so.{NEKO_C_VERSION}'->'libneko.so.{NEKO_C_VERSION[0]}'");
                 File.Copy(Combine(s, $"libneko.so.{NEKO_C_VERSION}"), Combine(s, $"libneko.so.{NEKO_C_VERSION[0]}"));
+                trace($"create 'libneko.so.{NEKO_C_VERSION}'->'libneko.so'");
                 File.Copy(Combine(s, $"libneko.so.{NEKO_C_VERSION}"), Combine(s, $"libneko.so"));
-                Linux.chmod(c_binary.FullName, 511);
+                trace("population binary variation has success");
+                trace($"chmod :: {FilePermissions.ACCESSPERMS} -> '{c_binary.FullName}'");
+                Syscall.chmod(c_binary.FullName, FilePermissions.ACCESSPERMS);
             };
             extractor(GetFolderForCache().FullName);
             
@@ -122,40 +130,14 @@ public static class Input
             await proc.WaitForExitAsync();
             trace($"process '{compiler}' has complete execution with {proc.ExitCode} exit code");
             if (proc.ExitCode == 0)
-                WriteLine($"success".Pastel(Color.GreenYellow));
+                trace($"success".Pastel(Color.GreenYellow));
+            else
+                error($"exit code {proc.ExitCode}".Pastel(Color.Red));
             return proc.ExitCode;
         }
 
         void trace(string s) => WriteLine($"[{"neko".Pastel(Color.Purple)}][{"T".Pastel(Color.Gray)}]: {s}");
         void error(string s) => WriteLine($"[{"neko".Pastel(Color.Purple)}][{"E".Pastel(Color.Red)}]: {s}");
         void warn(string s) => WriteLine($"[{"neko".Pastel(Color.Purple)}][{"W".Pastel(Color.Orange)}]: {s}");
-    }
-}
-
-
-public static class Linux
-{
-    [DllImport("libc", CharSet = CharSet.Ansi)]
-    public static extern int chmod(string path, uint mode);
-
-    //[DllImport("libc", CharSet = CharSet.Ansi)]
-    //public static extern int stat(string path, out stat_ buf);
-
-
-    public struct stat_ 
-    {
-        public uint      st_dev;     /* ID of device containing file */
-        public ulong     st_ino;     /* inode number */
-        public uint      st_mode;    /* protection */
-        public ulong     st_nlink;   /* number of hard links */
-        public uint      st_uid;     /* user ID of owner */
-        public uint      st_gid;     /* group ID of owner */
-        public uint      st_rdev;    /* device ID (if special file) */
-        public long      st_size;    /* total size, in bytes */
-        public long      st_blksize; /* blocksize for file system I/O */
-        public long      st_blocks;  /* number of 512B blocks allocated */
-        public long      st_atime;   /* time of last access */
-        public long      st_mtime;   /* time of last modification */
-        public long      st_ctime;   /* time of last status change */
     }
 }
