@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "host", "src\host\host.cspro
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "vm-base-test", "src\test\vm-base-test\vm-base-test.csproj", "{19B3FD51-005B-4EEE-B8AF-BA18D726638A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nekoc", "src\tools\nekoc\nekoc.csproj", "{CBE795D2-7B02-49CB-AAE5-B13BC9F56420}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "dotnet-nekoc", "src\tools\nekoc\dotnet-nekoc.csproj", "{CBE795D2-7B02-49CB-AAE5-B13BC9F56420}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
