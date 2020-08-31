@@ -44,9 +44,7 @@ public static class Input
         }
 
         var compilerFile = await GetOrCreateCompilerAsync();
-
-        trace($"call {nameof(GetOrCreateCompilerAsync)} -> {compilerFile}");
-
+        
         if (args is { Length: 0 })
             return await ExecAsync(compilerFile, "--help", "-v");
         return await ExecAsync(compilerFile, args.Concat(new[] { "-v" }).ToArray());
@@ -73,10 +71,13 @@ public static class Input
                 cache.EnumerateDirectories().Pipe(x => x.Delete()).Pipe(x => trace($"delete '{x}'..")).Consume();
             }
             var c_binary = GetCompilerBinariesFile();
-
+            trace($"lookup compiler binary file...");
             if (c_binary.Exists)
+            {
+                trace($"exists...");
                 return c_binary;
-            
+            }
+            trace($"not exists... download from github...");
             var zip = await new GithubClient("HaxeFoundation", "neko", NEKO_C_VERSION).DownloadAsync();
             if (GetOS() == "win")
                 extractor = (s) => ZipFile.ExtractToDirectory(zip.FullName, s);
@@ -126,6 +127,7 @@ public static class Input
             trace($"call {nameof(ExecAsync)} -> {compiler} and {string.Join(',', args)}");
             var inf = new ProcessStartInfo(compiler.FullName, string.Join(' ', args));
             inf.WorkingDirectory = Directory.GetCurrentDirectory();
+            trace($"working directory '{inf.WorkingDirectory}'");
             var proc = Process.Start(inf);
             await proc.WaitForExitAsync();
             trace($"process '{compiler}' has complete execution with {proc.ExitCode} exit code");
