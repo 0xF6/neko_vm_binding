@@ -69,10 +69,10 @@ public static class Input
                 cache.EnumerateFiles("*.*").Pipe(x => x.Delete()).Pipe(x => trace($"delete '{x}'..")).Consume();
                 cache.EnumerateDirectories().Pipe(x => x.Delete()).Pipe(x => trace($"delete '{x}'..")).Consume();
             }
-            var result = GetCompilerBinariesFile();
+            var c_binary = GetCompilerBinariesFile();
 
-            if (result.Exists)
-                return result;
+            if (c_binary.Exists)
+                return c_binary;
             Action<string> extractor = null;
             var zip = await new GithubClient("HaxeFoundation", "neko", NEKO_C_VERSION).DownloadAsync();
             if (GetOS() == "win")
@@ -83,13 +83,16 @@ public static class Input
                 using var tar = TarArchive.Open(file);
                 using var reader = tar.ExtractAllEntries();
                 reader.WriteAllToDirectory(s);
-            };
 
+                // Could not write symlink
+                // for more information please see https://github.com/dotnet/runtime/issues/24271
+                File.Copy(Combine(s, $"libneko.so.{NEKO_C_VERSION}"), Combine(s, $"libneko.so.{NEKO_C_VERSION[0]}"));
+                File.Copy(Combine(s, $"libneko.so.{NEKO_C_VERSION}"), Combine(s, $"libneko.so"));
+                Linux.chmod(c_binary.FullName, 511);
+            };
             extractor(GetFolderForCache().FullName);
-            trace($"chmod : {Linux.chdir(result.FullName)}");
-            trace($"chmod /bin/cat : {Linux.chdir("/bin/cat")}");
-            Linux.chmod(result.FullName, 492);
-            return result;
+            
+            return c_binary;
         }
 
         void PrintHeader()
@@ -134,6 +137,25 @@ public static class Linux
 {
     [DllImport("libc", CharSet = CharSet.Ansi)]
     public static extern int chmod(string path, uint mode);
-    [DllImport("libc", CharSet = CharSet.Ansi)]
-    public static extern int chdir(string path);
+
+    //[DllImport("libc", CharSet = CharSet.Ansi)]
+    //public static extern int stat(string path, out stat_ buf);
+
+
+    public struct stat_ 
+    {
+        public uint      st_dev;     /* ID of device containing file */
+        public ulong     st_ino;     /* inode number */
+        public uint      st_mode;    /* protection */
+        public ulong     st_nlink;   /* number of hard links */
+        public uint      st_uid;     /* user ID of owner */
+        public uint      st_gid;     /* group ID of owner */
+        public uint      st_rdev;    /* device ID (if special file) */
+        public long      st_size;    /* total size, in bytes */
+        public long      st_blksize; /* blocksize for file system I/O */
+        public long      st_blocks;  /* number of 512B blocks allocated */
+        public long      st_atime;   /* time of last access */
+        public long      st_mtime;   /* time of last modification */
+        public long      st_ctime;   /* time of last status change */
+    }
 }
