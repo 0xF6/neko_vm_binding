@@ -37,6 +37,7 @@
 - [ ] Marshaling neko std types
 - [ ] Marshaling non-primitive .NET types
 - [ ] More tests
+- [ ] Define modules on runtime
 - [ ] Improved Thread support
 - [ ] Remove binaries from repo (automatization build for this)
 - [x] dotnet global tools neko compiler
