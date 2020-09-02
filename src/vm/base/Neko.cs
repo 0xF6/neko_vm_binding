@@ -1,4 +1,4 @@
-﻿namespace Neko.Base
+namespace Neko.Base
 {
     using System;
     using System.Collections.Generic;
@@ -19,6 +19,14 @@
             _vm = Native.neko_vm_alloc(IntPtr.Zero.ToPointer());
             Native.neko_vm_select(_vm);
             _loader = NekoLoader.CreateDefault();
+        }
+
+        public NekoModule LoadModule(string path)
+        {
+            var file = new FileInfo(path);
+            if (!file.Exists)
+                throw new Exception($"File '{path}' not exists.");
+            return LoadModule(file);
         }
         public NekoModule LoadModule(FileInfo file)
         {
