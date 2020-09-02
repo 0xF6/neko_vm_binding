@@ -1,0 +1,120 @@
+$print("module loaded\n");
+$exports.log = function() { 
+    $print("swack pidoras");
+};
+$exports.ttw = function(f) {
+    f();
+    $exports.xuy = f;
+}
+$exports.x = 33;
+$exports.f = function(x) { return x * 2 + 1; }
+
+
+$exports.assert_int = function(i) {
+    $print(i);
+    $print("\n");
+    if($typeof(i) != $tint){
+        $print("assert_int FAIL");
+        $print("\n");
+    }
+    return i;
+}
+$exports.assert_string = function(i) {
+    $print(i);
+    $print("\n");
+    if($typeof(i) != $tstring){
+        $print("test_string FAIL");
+        $print("\n");
+    }
+    return i;
+}
+$exports.assert_boolean = function(i) {
+    $print(i);
+    $print("\n");
+    if($typeof(i) != $tbool){
+        $print("assert_boolean FAIL");
+        $print("\n");
+    }
+    return i;
+}
+$exports.assert_boolean_true = function() {
+    return true;
+}
+$exports.assert_boolean_false = function() {
+    return false;
+}
+$exports.assert_function = function(i) {
+    $print(i);
+    $print("\n");
+    if($typeof(i) != $tfunction){
+        $print("assert_function FAIL");
+        $print("\n");
+    }
+    i();
+    return i;
+}
+
+$exports.ttdarr = function() {
+    return $amake(3);
+}
+$exports.dws = function() {
+    var a = $amake(4);
+    a = $array("1","3","test", 12);
+    $print(a);
+    $print($asize(a));
+    $print("\n");
+    return a;
+}
+$exports.dws2 = function() {
+    var a = $amake(4);
+    a = $array("1","3","test", 12);
+    $print(a);
+    $print($asize(a));
+    $print("\n");
+    return a;
+}
+$exports.dws3 = function() {
+    var a = $amake(6);
+    a = $array("1","3","test", 12, 14, 15);
+    $print(a);
+    $print($asize(a));
+    $print("\n");
+    return a;
+}
+$exports.test_null = function(t) {
+    if ($typeof(i) != $tnull){
+        $print("test_null FAIL");
+        $print("\n");
+    }
+    return;
+}
+$exports.new_empty_obj = function(){
+    return $new(null);
+}
+
+$exports.new_obj = function(){
+    return {
+        x => 0,
+        y => -1,
+        msg => "hello"
+    };
+}
+$exports.test_array = function(s){
+    $print("test_array");
+    var a1 = $amake(3);
+    $print(a1);
+    $print(s);
+    return;
+}
+$exports.test_array2 = function(s){
+    $print("test_array2");
+    var a1 = $amake(3);
+    $print(a1);
+    $print(s);
+    return;
+}
+
+
+$exports.calling_root_test = function(){
+    return $dotnetfunc();
+}
