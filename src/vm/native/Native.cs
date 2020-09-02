@@ -91,6 +91,8 @@
         [DllImport("neko")]
         public static extern NekoValue* neko_val_field(NekoValue* o, int f);
         [DllImport("neko")]
+        public static extern NekoValue** neko_alloc_root(int gen);
+        [DllImport("neko")]
         public static extern NekoBuffer* neko_alloc_buffer(void* chars);
         [DllImport("neko")]
         public static extern void neko_val_buffer(NekoBuffer* buffer, NekoValue* value);
@@ -105,6 +107,10 @@
         // ((addr*){"val_true"}) + 0x6 - wtf
         public static NekoValue* v_true() => 
             (NekoValue*) NativeLibrary.GetExport((IntPtr)(void*)libRef, "val_true") + 0x6;
+
+        [DllImport("neko")]
+        public static extern NekoValue** get_neko_builtins();
+
         // ((addr*){"val_false"}) + 0x5 - wtf
         public static NekoValue* v_false() => 
             (NekoValue*) NativeLibrary.GetExport((IntPtr)(void*)libRef, "val_false") + 0x5;
