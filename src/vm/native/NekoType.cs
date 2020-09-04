@@ -1,6 +1,9 @@
 ﻿namespace Neko.NativeRing
 {
     using System;
+    using System.Linq;
+    using System.Reflection;
+    using Base;
 
     public unsafe ref struct NekoType
     {
@@ -40,5 +43,17 @@
             => get_valtype(v) == NekoValueType.VAL_NULL;
         public static NekoValueType get_valtype(void* v) 
             => (NekoValueType)(is_int(v) ? (uint)NekoValueType.VAL_INT : short_tag(v));
+
+
+        public static bool IsCompatible(ParameterInfo t) 
+            => IsCompatible(t.ParameterType);
+        public static bool IsCompatible(Type t)
+        {
+            if (new [] { typeof(void*), typeof(nint), typeof(nuint) }.Any(x => x == t))
+                return true;
+            if (t == typeof(NekoObject))
+                return true;
+            return t.IsSubclassOf(typeof(NekoBehaviour));
+        }
     }
 }
