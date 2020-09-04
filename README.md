@@ -37,12 +37,13 @@
 - [ ] Marshaling neko std types
 - [ ] Marshaling non-primitive .NET types
 - [ ] More tests
+- [ ] Define modules on runtime
 - [ ] Improved Thread support
 - [ ] Remove binaries from repo (automatization build for this)
 - [x] dotnet global tools neko compiler
     - [x] win-x64
-    - [ ] osx-x64 (need help with testing)
-    - [ ] linux-x64 (need help with tar\chmod logic)
+    - [x] osx-x64 (need help with testing)
+    - [x] linux-x64
 
 ### 💫 Fast start
 
