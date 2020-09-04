@@ -28,7 +28,7 @@
             // TODO check function is static
             var p = Marshal.GetFunctionPointerForDelegate(actor);
             var result = Native.neko_alloc_function((void*)p, 0, name);
-            return new NekoFunction(name, result) {_kind = NekoFunctionKind.Exported};;
+            return new NekoFunction(name, result) {_kind = NekoFunctionKind.Exported};
         }
 
         public static NekoFunction Create(NekoModule module, string functionName)
