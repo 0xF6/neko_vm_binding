@@ -9,7 +9,10 @@ $exports.ttw = function(f) {
 $exports.x = 33;
 $exports.f = function(x) { return x * 2 + 1; }
 
-
+$exports.getSizeStr = function(str) {
+    $print($ssize(str));
+    return $ssize(str);
+}
 $exports.assert_int = function(i) {
     $print(i);
     $print("\n");

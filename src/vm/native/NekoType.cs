@@ -57,7 +57,7 @@ namespace Neko.NativeRing
                 return true;
             if (t.IsSubclassOf(typeof(NekoBehaviour)))
                 return true;
-            if (t.IsPrimitive)
+            if (t.IsPrimitive && (typeof(ulong) != t && typeof(long) != t))
                 return true;
             return false;
         }

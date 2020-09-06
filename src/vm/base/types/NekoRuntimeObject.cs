@@ -7,7 +7,7 @@ namespace Neko.Base
     using System.Dynamic;
     using System.Linq;
     using NativeRing;
-    public sealed unsafe class NekoRuntimeObject : NekoObject, INativeCast<_runtime_obj>, IEnumerable<NekoObject>
+    public unsafe class NekoRuntimeObject : NekoObject, INativeCast<_runtime_obj>, IEnumerable<NekoObject>
     {
         private DynamicNekoObjectProxy proxy { get; }
         internal NekoRuntimeObject(NekoValue* value) : base(value)
@@ -34,6 +34,37 @@ namespace Neko.Base
             .Select(x => x.Value)
             .ToArray();
 
+
+        public static NekoRuntimeObject Alloc() 
+            => new NekoRuntimeObject(Native.neko_alloc_object(null));
+
+        public static NekoRuntimeObject From(object o)
+        {
+            var runtimeObject = Alloc();
+            var t = o.GetType();
+
+            var props = t.GetProperties();
+            var fields = t.GetFields();
+
+
+            foreach (var prop in props)
+            {
+                if (!NekoType.IsCompatible(prop.PropertyType, true))
+                    continue;
+                try
+                {
+                    runtimeObject[prop.Name] = NekoMarshal.CLRToPrt(prop.GetValue(o));
+                }
+                catch {}
+            }
+            foreach (var field in fields)
+            {
+                if (!NekoType.IsCompatible(field.FieldType, true))
+                    continue;
+                runtimeObject[field.Name] = NekoMarshal.CLRToPrt(field.GetValue(o));
+            }
+            return runtimeObject;
+        }
 
 
         public class DynamicNekoObjectProxy : DynamicObject
