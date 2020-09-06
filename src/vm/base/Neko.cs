@@ -16,6 +16,7 @@
         internal readonly IDictionary<string, NekoModule> modules = new Dictionary<string, NekoModule>();
         internal NekoLoader _loader { get; private set; }
         public int ThreadID { get; internal set; }
+        internal NekoGlobal Global { get; }
         public Neko()
         {
             ThreadID = Thread.CurrentThread.ManagedThreadId;
@@ -23,6 +24,7 @@
             _vm = neko_vm_alloc(IntPtr.Zero.ToPointer());
             neko_vm_select(_vm);
             _loader = NekoLoader.CreateDefault();
+            Global = new NekoGlobal(get_neko_builtins()[0]);
         }
 
         public NekoModule LoadModule(string path)
@@ -45,6 +47,9 @@
             neko_vm_select(_vm);
         }
 
+
+        
+
         public void MarshalGlobal(Type t)
         {
             if (!t.IsClass)
@@ -61,7 +66,7 @@
                 var @params = info.GetParameters();
                 if (@params.Length > 5)
                     continue;
-                if (!@params.All(NekoType.IsCompatible))
+                if (!@params.All(x => NekoType.IsCompatible(x)))
                     continue;
                 if (!(info.ReturnType == typeof(void) || NekoType.IsCompatible(info.ReturnType)))
                     continue;
@@ -85,6 +90,7 @@
             unsafe static object[] Populate(ParameterInfo[] args, params void*[] innerArgs) 
                 => args.Select((x, i) => GetOpImplicit()((NekoValue*) innerArgs[i])).ToArray();
 
+            // maybe this need refactoring(((9(9
             return @p.Length switch
             {
                 0 when f => Link<nad0>((nad0)(() => __unsafe_cast._cmv(method))),
