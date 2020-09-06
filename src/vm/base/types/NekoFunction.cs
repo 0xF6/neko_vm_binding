@@ -1,4 +1,4 @@
-﻿namespace Neko.Base
+namespace Neko.Base
 {
     using System;
     using System.Runtime.InteropServices;
@@ -44,10 +44,16 @@
         }
         public NekoValue* InvokeWithNative(params NekoValue*[] args)
         {
-            if(args.Length != ArgCount)
+            if (args.Length != ArgCount)
                 throw new Exception();
-            if(args.Length == 1)
+            if (args.Length == 0)
+                return Native.neko_val_call0(@ref);
+            if (args.Length == 1)
                 return Native.neko_val_call1(@ref, args[0]);
+            if (args.Length == 2)
+                return Native.neko_val_call2(@ref, args[0], args[1]);
+            if (args.Length == 3)
+                return Native.neko_val_call3(@ref, args[0], args[1], args[3]);
             throw new Exception();
         }
 
