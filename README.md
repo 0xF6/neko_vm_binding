@@ -33,11 +33,11 @@
 - [ ] Documentation
 - [ ] Improved API
 - [x] Marshaling default types (without `vabstract` and `vkind`)
-- [ ] Marshaling POCO object
+- [x] Marshaling POCO object
 - [ ] Marshaling neko std types
 - [ ] Marshaling non-primitive .NET types
 - [ ] More tests
-- [ ] Define modules on runtime
+- [x] Define global functions on runtime
 - [ ] Improved Thread support
 - [ ] Remove binaries from repo (automatization build for this)
 - [x] dotnet global tools neko compiler
