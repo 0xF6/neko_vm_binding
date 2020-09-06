@@ -16,8 +16,11 @@ namespace Neko.Base
             proxy = new DynamicNekoObjectProxy(this);
         }
 
-        public NekoObject this[string name] 
-            => Native.neko_val_field(@ref, Native.neko_val_id(name));
+        public NekoObject this[string name]
+        {
+            get => Native.neko_val_field(@ref, Native.neko_val_id(name));
+            set => Native.neko_alloc_field(@ref, Native.neko_val_id(name), value);
+        }
 
         public dynamic AsDynamic() => proxy;
 
