@@ -32,6 +32,11 @@
             if (!NekoType.is_int32(value))
                 throw new InvalidTypeNekoException(VAL_INT32, value);
         }
+        public static void IsInt(NekoValue* value)
+        {
+            if (!NekoType.is_int(value))
+                throw new InvalidTypeNekoException(VAL_INT, value);
+        }
         public static void IsNull(NekoValue* value)
         {
             if (!NekoType.is_null(value))

@@ -12,7 +12,7 @@
             if (NekoType.is_null(value))
                 return new NekoNull(value);
             if (NekoType.is_int(value))
-                return (NekoInt32)((IntPtr)value).ToInt32();
+                return new NekoInt(value);
             if (NekoType.is_exception(value))
                 return new NekoRuntimeException(value);
             if (NekoType.is_string(value))

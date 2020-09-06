@@ -54,15 +54,15 @@
 
             #region numbers
             if (value is int i32)
-                return (NekoInt32)i32;
+                return (NekoInt)i32;
             if (value is short i16)
-                return (NekoInt32)i16;
+                return (NekoInt)i16;
             if (value is ushort u16)
-                return (NekoInt32)u16;
+                return (NekoInt)u16;
             if (value is byte u8)
-                return (NekoInt32)u8;
+                return (NekoInt)u8;
             if (value is sbyte i8)
-                return (NekoInt32)i8;
+                return (NekoInt)i8;
             #endregion
            
             if (value is Delegate)
