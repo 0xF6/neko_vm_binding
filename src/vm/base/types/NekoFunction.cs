@@ -62,6 +62,8 @@ namespace Neko.Base
 
         public NekoObject Invoke(params object[] args)
         {
+            if (args is null)
+                args = new object[] {null};
             if(args.Length != ArgCount)
                 throw new InvalidArgumentNekoException();
             var nargs = new NekoValue*[args.Length];
