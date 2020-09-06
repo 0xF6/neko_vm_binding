@@ -46,15 +46,30 @@ namespace Neko.NativeRing
             => (NekoValueType)(is_int(v) ? (uint)NekoValueType.VAL_INT : short_tag(v));
 
 
-        public static bool IsCompatible(ParameterInfo t) 
-            => IsCompatible(t.ParameterType);
-        public static bool IsCompatible(Type t)
+        internal static bool IsCompatibleBackward(Type t)
         {
             if (new [] { typeof(void*), typeof(nint), typeof(nuint) }.Any(x => x == t))
                 return true;
-            if (t == typeof(NekoObject))
-                return true;
-            return t.IsSubclassOf(typeof(NekoBehaviour));
+            return t?.IsSubclassOf(typeof(NekoBehaviour)) ?? false;
         }
+
+        internal static bool IsCompatibleForward(Type t)
+        {
+            if (t == typeof(string))
+                return true;
+            if (t.IsSubclassOf(typeof(NekoBehaviour)))
+                return true;
+            if (t.IsPrimitive)
+                return true;
+            return false;
+        }
+
+        public static bool IsCompatible(ParameterInfo t, bool marshaling = false) 
+            => IsCompatible(t.ParameterType, marshaling);
+
+        public static bool IsCompatible(MemberInfo t, bool marshaling = false) 
+            => IsCompatible(t.DeclaringType, marshaling);
+        public static bool IsCompatible(Type t, bool marshaling = false) 
+            => !marshaling ? IsCompatibleBackward(t) : IsCompatibleForward(t);
     }
 }
