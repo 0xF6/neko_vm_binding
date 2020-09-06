@@ -1,4 +1,4 @@
-namespace Neko.Base
+﻿namespace Neko.Base
 {
     using System;
     using System.Runtime.InteropServices;
@@ -76,6 +76,11 @@ namespace Neko.Base
                 3 => Native.neko_val_call3(@ref, nargs[0], nargs[1], nargs[2]),
                 _ => Native.neko_val_callN(@ref, AllocateArgs(args), args.Length)
             };
+
+            var obj = Create(result);
+
+            if (obj is NekoRuntimeException exception)
+                throw new NekoVMException(exception);
             return result;
         }
 
