@@ -114,6 +114,7 @@ $exports.test_array2 = function(s){
     return;
 }
 
-$exports.calling_root_test2 = function(){
-    return $cucumber("root-test");
+$exports.testObject = function(o){
+    $print(o);
+    return;
 }
