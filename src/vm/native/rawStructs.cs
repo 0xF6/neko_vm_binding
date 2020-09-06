@@ -85,8 +85,18 @@ namespace Neko.NativeRing
     }
     public unsafe struct _runtime_obj
     {
-        public uint* t;
+        public uint t;
         public _neko_objtable table;
         public void* proto;
     }
+
+    public unsafe struct __exception
+    {
+        public uint t;
+        public _neko_string* msg;
+        public nint line;
+        public _neko_string* file;
+        public _neko_string* funcsig;
+    }
+
 }

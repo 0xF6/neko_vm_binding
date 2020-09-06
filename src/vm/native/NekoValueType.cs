@@ -12,6 +12,7 @@
         VAL_FUNCTION	= 6,
         VAL_ABSTRACT	= 7,
         VAL_INT32		= 8,
+        VAL_EXCEPTION   = 9,
         VAL_PRIMITIVE	= 6 | 16,
         VAL_JITFUN		= 6 | 32,
         VAL_32_BITS		= 0xFFFFFFFF

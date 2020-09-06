@@ -49,6 +49,8 @@
                 return fn.@ref;
             if (value is NekoArray ar)
                 return ar.@ref;
+            if (value is NekoRuntimeObject ro)
+                return ro.@ref;
 
             #region numbers
             if (value is int i32)
@@ -87,19 +89,14 @@
         {
             if (NekoType.is_null(value))
                 return null;
-            if (NekoType.get_valtype(value) == VAL_FUNCTION)
-                return new NekoFunction("<unk>", value);
-            if (NekoType.get_valtype(value) == VAL_STRING)
-                return new NekoString(value);
-            if (NekoType.get_valtype(value) == VAL_INT32)
-                return ((_neko_int32*)value)->i;
-            if (NekoType.get_valtype(value) == VAL_INT)
-                return (int)(IntPtr)value >> 1;
             if (value == Native.v_true())
                 return true;
             if (value == Native.v_false())
                 return false;
-            // TODO
+            if (NekoType.get_valtype(value) == VAL_FUNCTION)
+                return new NekoFunction("<unk>", value);
+            if (Enum.IsDefined(typeof(NekoValueType), NekoType.get_valtype(value)))
+                return NekoObject.Create(value);
             throw new TypeIsNotSupportNekoException($"{(NekoValueType)value->t}");
         }
     }

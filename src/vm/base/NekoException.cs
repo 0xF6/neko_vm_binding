@@ -10,6 +10,19 @@
         protected NekoException(string message) : base(message) { }
     }
 
+    public sealed class NekoVMException : NekoException
+    {
+        private readonly NekoRuntimeException _exception;
+
+        internal NekoVMException(NekoRuntimeException exception) : base(exception.Message) 
+            => _exception = exception;
+
+        public override string Source 
+            => $"{_exception.Function} in {_exception.File}:{_exception.Line}";
+        public override string StackTrace 
+            => $"   at {Source}{Environment.NewLine}{base.StackTrace}";
+    }
+
     public sealed class ModuleLoadNekoException : NekoException
     {
         public ModuleLoadNekoException(FileInfo file, string exception) 
