@@ -23,8 +23,6 @@
                 return new NekoFloat(value);
             if (NekoType.is_array(value))
                 return new NekoArray(value);
-            if (NekoType.is_int32(value))
-                return new NekoInt32(value);
             if (NekoType.is_object(value))
                 return new NekoRuntimeObject(value);
             if (NekoType.is_boolean(value))
@@ -35,13 +33,13 @@
         #region implicit operator
         public static implicit operator NekoObject(NekoValue* val) => Create(val);
         public static implicit operator NekoObject(string s) => (NekoString)s;
-        public static implicit operator NekoObject(int s) => (NekoInt32)s;
+        public static implicit operator NekoObject(int s) => (NekoInt)s;
         public static implicit operator NekoObject(bool s) => (NekoBool)s;
         public static implicit operator NekoObject(float s) => (NekoFloat)s;
         public static implicit operator NekoObject(double s) => (NekoFloat)s;
 
         public static implicit operator string(NekoObject s) => (NekoString)s;
-        public static implicit operator int(NekoObject s) => (NekoInt32)s;
+        public static implicit operator int(NekoObject s) => (NekoInt)s;
         public static implicit operator bool(NekoObject s) => (NekoBool)s;
         public static implicit operator float(NekoObject s) => (NekoFloat)s;
         public static implicit operator double(NekoObject s) => (NekoFloat)s;

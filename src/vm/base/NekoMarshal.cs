@@ -13,7 +13,7 @@
 
         static NekoMarshal()
         {
-            variants.Add(typeof(int), VAL_INT32);
+            variants.Add(typeof(int), VAL_INT);
             variants.Add(typeof(string), VAL_STRING);
             variants.Add(typeof(bool), VAL_BOOL);
             variants.Add(typeof(float), VAL_FLOAT);

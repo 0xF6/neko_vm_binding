@@ -27,11 +27,6 @@
             if (!NekoType.is_float(value))
                 throw new InvalidTypeNekoException(VAL_FLOAT, value);
         }
-        public static void IsInt32(NekoValue* value)
-        {
-            if (!NekoType.is_int32(value))
-                throw new InvalidTypeNekoException(VAL_INT32, value);
-        }
         public static void IsInt(NekoValue* value)
         {
             if (!NekoType.is_int(value))

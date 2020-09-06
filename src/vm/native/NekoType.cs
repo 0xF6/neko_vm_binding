@@ -23,8 +23,6 @@ namespace Neko.NativeRing
             => ((long)(IntPtr)v & 1) != 0;
         public static bool is_float(void* v) 
             => (!is_int(v) && tag(v) == NekoValueType.VAL_FLOAT);
-        public static bool is_int32(void* v) 
-            => (!is_int(v) && tag(v) == NekoValueType.VAL_INT32);
         public static bool is_object(void* v) 
             => (!is_int(v) && tag(v) == NekoValueType.VAL_OBJECT);
         public static bool is_abstract(void* v) 
