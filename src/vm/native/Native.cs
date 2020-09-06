@@ -104,16 +104,13 @@
             fixed (NekoValue* p = &Null)
                 return p;
         }
-        // ((addr*){"val_true"}) + 0x6 - wtf
-        public static NekoValue* v_true() => 
-            (NekoValue*) NativeLibrary.GetExport((IntPtr)(void*)libRef, "val_true") + 0x6;
-
+        [DllImport("neko", EntryPoint = "get_value_true")]
+        public static extern NekoValue* v_true();
+        [DllImport("neko", EntryPoint = "get_value_false")]
+        public static extern NekoValue* v_false();
         [DllImport("neko")]
         public static extern NekoValue** get_neko_builtins();
 
-        // ((addr*){"val_false"}) + 0x5 - wtf
-        public static NekoValue* v_false() => 
-            (NekoValue*) NativeLibrary.GetExport((IntPtr)(void*)libRef, "val_false") + 0x5;
 
 
         [DllImport("neko")]
