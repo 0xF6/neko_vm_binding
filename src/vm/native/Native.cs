@@ -1,7 +1,9 @@
 ﻿namespace Neko.NativeRing
 {
     using System;
+    using System.Collections.Generic;
     using System.Diagnostics;
+    using System.Linq;
     using System.Reflection;
     using System.Runtime.InteropServices;
     using Base;
@@ -9,7 +11,7 @@
     internal static unsafe class Native
     {
         private static IntPtr _ref;
-
+        private static bool isDebug;
         private static NekoValue Null = new NekoValue { t = (uint)NekoValueType.VAL_NULL };
 
         internal static IntPtr libRef
@@ -24,22 +26,59 @@
         }
         static Native()
         {
+            isDebug = Environment.GetEnvironmentVariable("LD_DEBUG") == "libs";
             if (RuntimeInformation.ProcessArchitecture != Architecture.X64)
                 throw new NotSupportedException($"Temporary support only x64 os arch.");
             NativeLibrary.SetDllImportResolver(typeof(Native).Assembly, Resolver);
+            __debug_loader(".ctor");
+        }
+
+        private static void __debug_loader(string s)
+        {
+            if (!isDebug)
+                return;
+            lock (Console.Out)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine($"neko::native{s}");
+                Console.ForegroundColor = ConsoleColor.White;
+            }
         }
 
         private static IntPtr Resolver(string name, Assembly asm, DllImportSearchPath? search)
         {
-            // TODO, research alternative method loading library when run program with debugger
-            if (Debugger.IsAttached && name == "neko") // wtf
-                name = $"./runtimes/{_get_os()}-x64/native/{_format_lib(name)}";
-            IntPtr _resolver() => NativeLibrary.Load(name);
-            if (!name.Equals("neko", StringComparison.InvariantCultureIgnoreCase))
-                return _resolver();
-            if (_ref == IntPtr.Zero)
-                return (_ref = _resolver());
-            return _ref;
+            if (name.Equals("neko", StringComparison.InvariantCultureIgnoreCase))
+            {
+                if (_ref == IntPtr.Zero)
+                    return _ref = _resolver(name);
+                return _ref;
+            }
+            return _resolver(name);
+        }
+
+        private static string[] _getSearchPath() =>
+            new[]
+            {
+                "./{__formatted_lib_name__}",
+                "./runtimes/{__OS__}-x64/native/{__formatted_lib_name__}",
+                "./bin64/{__formatted_lib_name__}",
+                "./Engine64/{__formatted_lib_name__}",
+                "{__formatted_lib_name__}" // maybe needed load it first-shot from [/usr/lib, /windows]?
+            };
+
+        private static IntPtr _resolver(string name)
+        {
+            var paths = _getSearchPath()
+                .Select(x => x.Replace("{__formatted_lib_name__}", _format_lib(name)))
+                .Select(x => x.Replace("{__OS__}", _get_os()))
+                .Pipe(x => __debug_loader($".find_path {x}"))
+                .ToArray();
+            var targetPath = paths.Select<string, (string path, bool result)>
+                    (path => (path, NativeLibrary.TryLoad(path, out _)))
+                .Pipe(x => __debug_loader($".try_find in {x.path} -> {x.result}"))
+                .Where(x => x.result)
+                .FirstOrDefault().path ?? name;
+            return NativeLibrary.Load(targetPath);
         }
 
         private static string _format_lib(string name)
@@ -146,5 +185,18 @@
         public static extern NekoValue* neko_alloc_array(uint size);
         public static int neko_val_array_size(NekoArray v) 
             => (int)((uint) NekoType.tag(v.@ref) >> 4);
+    }
+
+
+    internal static class __linq
+    {
+        public static IEnumerable<T> Pipe<T>(this IEnumerable<T> @this, Action<T> selector)
+        {
+            foreach (var value in @this)
+            {
+                selector(value);
+                yield return value;
+            }
+        }
     }
 }
