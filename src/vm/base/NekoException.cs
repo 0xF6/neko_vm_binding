@@ -21,6 +21,8 @@
             => $"{_exception.Function} in {_exception.File}:{_exception.Line}";
         public override string StackTrace 
             => $"   at {Source}{Environment.NewLine}{base.StackTrace}";
+
+        public override string ToString() => $"\nAssert Neko Exception [{_exception.Message}] \n{StackTrace}";
     }
 
     public sealed class ModuleLoadNekoException : NekoException
