@@ -64,7 +64,7 @@
         {
             var o = module["setget_int"].Invoke(1);
             Assert.NotNull(o);
-            Assert.AreEqual(1, (int)(NekoInt32)o);
+            Assert.AreEqual(1, (int)(NekoInt)o);
         }
         [Test]
         public void CallAndGetFloat()
