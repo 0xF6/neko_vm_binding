@@ -17,9 +17,9 @@
         public NekoInt ssize(NekoString str) =>
             (NekoInt)(new NekoFunction(nameof(ssize), base[nameof(ssize)].@ref))
             .InvokeWithNative(str.@ref);
-        [Obsolete("Not working...", true)]
-        public NekoRuntimeObject @new() =>
+        [Obsolete("Not working...")]
+        public NekoRuntimeObject @new(NekoObject value) =>
             (NekoRuntimeObject)new NekoFunction("new", base["new"].@ref)
-                .InvokeWithNative(null);
+                .Invoke(value);
     }
 }
