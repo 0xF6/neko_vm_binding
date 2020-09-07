@@ -7,11 +7,15 @@
     <PlatformTarget>x64</PlatformTarget>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <LangVersion>preview</LangVersion>
-    <Version>2.3.1-preview.5</Version>
+    <Version>2.3.1-preview.6</Version>
     <AnalysisLevel>latest</AnalysisLevel>
   </PropertyGroup>
   <ItemGroup>
     <None Update="runtimes\**" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="Properties\logo-2.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <!-- core library -->
@@ -47,5 +51,8 @@
     <Authors>Yuuki Wesp</Authors>
     <Company>Yuuki Wesp</Company>
     <Product>NekoVM Bindings</Product>
+    <Copyright>2020 (C) Yuuki Wesp, 2015-2017 Haxe Foundation</Copyright>
+    <PackageIcon>logo-2.png</PackageIcon>
+    <PackageId>Ivy.NekoVM</PackageId>
   </PropertyGroup>
 </Project>
