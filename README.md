@@ -28,6 +28,11 @@
 </p>
 
 
+```powershell
+Install-Package Ivy.NekoVM -Version 2.3.1-preview.6
+```
+
+
 ## 🧬 Roadmap
 
 - [ ] Documentation
