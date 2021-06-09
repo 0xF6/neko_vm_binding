@@ -81,7 +81,7 @@ namespace Neko.NativeRing
     public unsafe struct _neko_objtable
     {
         public int count;
-        public _neko_objcell *cells;
+        public _neko_objcell* cells;
     }
     public unsafe struct _runtime_obj
     {

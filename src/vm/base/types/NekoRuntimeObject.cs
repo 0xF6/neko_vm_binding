@@ -24,18 +24,18 @@ namespace Neko.Base
 
         public dynamic AsDynamic() => proxy;
 
-        public _runtime_obj* AsInternal() => (_runtime_obj*) @ref;
+        public _runtime_obj* AsInternal() => (_runtime_obj*)@ref;
 
         public string[] GetFields() =>
             (..AsInternal()->table.count)
-            .ForEach(x => *&((_runtime_obj*) @ref)->table.cells[x])
+            .ForEach(x => *&((_runtime_obj*)@ref)->table.cells[x])
             .Select(x => (NekoObject)Native.neko_val_field_name(x.id))
             .Cast<NekoString>()
             .Select(x => x.Value)
             .ToArray();
 
 
-        public static NekoRuntimeObject Alloc() 
+        public static NekoRuntimeObject Alloc()
             => new NekoRuntimeObject(Native.neko_alloc_object(null));
 
         public static NekoRuntimeObject From(object o)
@@ -55,7 +55,7 @@ namespace Neko.Base
                 {
                     runtimeObject[prop.Name] = NekoMarshal.CLRToPrt(prop.GetValue(o));
                 }
-                catch {}
+                catch { }
             }
             foreach (var field in fields)
             {
@@ -90,7 +90,7 @@ namespace Neko.Base
                 }
             }
         }
-        public IEnumerator<NekoObject> GetEnumerator() 
+        public IEnumerator<NekoObject> GetEnumerator()
             => GetFields().Select(field => this[field]).GetEnumerator();
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     }

@@ -22,7 +22,7 @@
             _version = version;
         }
 
-        public string GetFile() 
+        public string GetFile()
             => $"neko-{_version}-{AppState.GetOS()}64.{(AppState.GetOS() == "win" ? "zip" : "tar.gz")}";
 
         public async ValueTask<FileInfo> DownloadAsync()
@@ -34,19 +34,19 @@
             var targetFile = GetFile();
 
             var asset = release.Assets.FirstOrDefault(x => x.Name == targetFile);
-            
-            if(asset is null)
+
+            if (asset is null)
                 throw new Exception($"Failed find {targetFile} in latest release in '{_owner}/{_repo}'");
 
 
-            using var handler = HttpClientDownloadWithProgress.Create(asset.BrowserDownloadUrl, 
+            using var handler = HttpClientDownloadWithProgress.Create(asset.BrowserDownloadUrl,
                 new FileInfo(Path.Combine(AppState.GetFolderForCache().FullName, targetFile)));
             Console.WriteLine($"{":page_with_curl:".Emoji()} Download {asset.BrowserDownloadUrl}..");
             var pb = new ProgressBar(100, 0, '=');
 
             handler.ProgressChanged += (size, downloaded, percentage) =>
             {
-                if(percentage != null)
+                if (percentage != null)
                     pb.Refresh((int)percentage.Value, $"");
             };
 

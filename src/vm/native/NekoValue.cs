@@ -20,8 +20,8 @@
                     return VAL_FLOAT;
                 if (NekoType.is_object(p))
                     return VAL_OBJECT;
-                return NekoType.is_string(p) ? 
-                    VAL_STRING : 
+                return NekoType.is_string(p) ?
+                    VAL_STRING :
                     NekoType.get_valtype(p);
             }
         }

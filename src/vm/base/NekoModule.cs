@@ -10,7 +10,7 @@
     {
         private DynamicNekoModuleProxy proxy { get; set; }
 
-        internal NekoModule(NekoValue* value) : base(value) 
+        internal NekoModule(NekoValue* value) : base(value)
             => proxy = new DynamicNekoModuleProxy(this);
 
         public NekoFunction this[string name] => NekoFunction.Create(this, name);
@@ -18,7 +18,7 @@
 
         public dynamic AsDynamic() => proxy;
 
-        public __module* AsInternal() => (__module*) @ref;
+        public __module* AsInternal() => (__module*)@ref;
 
         public struct __module
         {

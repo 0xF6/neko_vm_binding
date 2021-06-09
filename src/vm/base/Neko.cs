@@ -48,7 +48,7 @@
         }
 
 
-        
+
 
         public void MarshalGlobal(Type t)
         {
@@ -71,7 +71,7 @@
                 if (!(info.ReturnType == typeof(void) || NekoType.IsCompatible(info.ReturnType)))
                     continue;
                 var m = MakeNekoProxy(info);
-                var f = neko_alloc_function((void*) MakeNekoProxy(info), (uint) @params.Length, $"${info.Name}");
+                var f = neko_alloc_function((void*)MakeNekoProxy(info), (uint)@params.Length, $"${info.Name}");
                 neko_alloc_field(gen[0], neko_val_id(info.Name), f);
             }
         }
@@ -81,14 +81,14 @@
             var @p = method.GetParameters();
             var f = method.ReturnType == typeof(void);
 
-            static nint Link<D>(Delegate d) where D : Delegate 
-                => Marshal.GetFunctionPointerForDelegate((D) d);
+            static nint Link<D>(Delegate d) where D : Delegate
+                => Marshal.GetFunctionPointerForDelegate((D)d);
 
             unsafe static oic GetOpImplicit()
-                => typeof(NekoObject).GetMethod("op_Implicit", new[] {typeof(NekoValue*)}).CreateDelegate<oic>();
+                => typeof(NekoObject).GetMethod("op_Implicit", new[] { typeof(NekoValue*) }).CreateDelegate<oic>();
 
-            unsafe static object[] Populate(ParameterInfo[] args, params void*[] innerArgs) 
-                => args.Select((x, i) => GetOpImplicit()((NekoValue*) innerArgs[i])).ToArray();
+            unsafe static object[] Populate(ParameterInfo[] args, params void*[] innerArgs)
+                => args.Select((x, i) => GetOpImplicit()((NekoValue*)innerArgs[i])).ToArray();
 
             // maybe this need refactoring(((9(9
             return @p.Length switch
@@ -98,7 +98,7 @@
                 2 when f => Link<nad2>((nad2)((v1, v2) => __unsafe_cast._cmv(method, Populate(@p, v1, v2)))),
                 3 when f => Link<nad2>((nad3)((v1, v2, v3) => __unsafe_cast._cmv(method, Populate(@p, v1, v2, v3)))),
                 4 when f => Link<nad2>((nad4)((v1, v2, v3, v4) => __unsafe_cast._cmv(method, Populate(@p, v1, v2, v3, v4)))),
-                5 when f => Link<nad2>((nad5)((v1, v2, v3, v4, v5) =>__unsafe_cast._cmv(method, Populate(@p, v1, v2, v3, v4, v5)))),
+                5 when f => Link<nad2>((nad5)((v1, v2, v3, v4, v5) => __unsafe_cast._cmv(method, Populate(@p, v1, v2, v3, v4, v5)))),
 
                 0 when !f => Link<nfd0>((nfd0)(() => __unsafe_cast._cmp(method))),
                 1 when !f => Link<nfd1>((nfd1)((v1) => __unsafe_cast._cmp(method, Populate(@p, v1)))),
@@ -116,12 +116,12 @@
             neko_vm_select(null);
             _vm = null;
             _loader = null;
-            foreach (var (_, module) in modules) 
+            foreach (var (_, module) in modules)
                 (module as IDisposable).Dispose();
             neko_global_free();
         }
 
-        public _neko_vm* AsInternal() => (_neko_vm*) _vm;
+        public _neko_vm* AsInternal() => (_neko_vm*)_vm;
         ~Neko() => (this as INekoDisposable)._release();
     }
 }

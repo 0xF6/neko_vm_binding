@@ -10,7 +10,7 @@
                 ? ""
                 : EmojiOne.EmojiOne.ShortnameToUnicode(str);
 
-        public static DirectoryInfo AsDirectoryInfo(this string str) => new (str);
-        public static FileInfo AsFileInfo(this string str) => new (str);
+        public static DirectoryInfo AsDirectoryInfo(this string str) => new(str);
+        public static FileInfo AsFileInfo(this string str) => new(str);
     }
 }

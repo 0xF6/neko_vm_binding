@@ -4,33 +4,33 @@
     using System.Collections;
     using System.Collections.Generic;
     using NativeRing;
-    
+
     public unsafe class NekoArray : NekoObject, IEnumerable<NekoObject>, INativeCast<_neko_array>, ICollection
     {
-        internal NekoArray(NekoValue* value) : base(value) => 
+        internal NekoArray(NekoValue* value) : base(value) =>
             NekoAssert.IsArray(value);
         public NekoObject this[int i]
         {
             get => GetByIndex(i);
             set => SetByIndex(i, value);
         }
-        public NekoObject GetByIndex(int index) 
+        public NekoObject GetByIndex(int index)
             => GetByIndexNative(index);
-        public void SetByIndex(int index, NekoObject value) 
+        public void SetByIndex(int index, NekoObject value)
             => SetByIndexNative(index, value.@ref);
-        public void SetByIndexNative(int index, NekoValue* value) 
-            => (&((_neko_array*) @ref)->ptr)[index] = value;
+        public void SetByIndexNative(int index, NekoValue* value)
+            => (&((_neko_array*)@ref)->ptr)[index] = value;
         public NekoValue* GetByIndexNative(int index)
-            => (&((_neko_array*) @ref)->ptr)[index];
+            => (&((_neko_array*)@ref)->ptr)[index];
 
-        public _neko_array* AsInternal() 
+        public _neko_array* AsInternal()
             => (_neko_array*)@ref;
 
-        public static NekoArray Alloc(int size) => Alloc((uint) size);
+        public static NekoArray Alloc(int size) => Alloc((uint)size);
         public static NekoArray Alloc(uint size)
         {
             var arr = new NekoArray(Native.neko_alloc_array(size));
-            for(var i = 0; i < size; i++)
+            for (var i = 0; i < size; i++)
                 arr[i] = Native.v_null();
             return arr;
         }
@@ -45,7 +45,7 @@
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
 
-        public void CopyTo(Array array, int index) 
+        public void CopyTo(Array array, int index)
             => throw new NotSupportedException();
 
         public int Count => Native.neko_val_array_size(this);
