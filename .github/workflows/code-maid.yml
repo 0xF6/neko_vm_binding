@@ -20,7 +20,7 @@ jobs:
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           action: "fix"
-          workspace: "mana_lang.sln"
+          workspace: "neko.sln"
     
       - name: Commit files
         if: steps.format.outputs.has-changes == 'true'
