@@ -7,11 +7,11 @@
     {
         internal NekoGlobal(NekoValue* value) : base(value) { }
 
-        public NekoValueType @typeof(NekoValue* value) => 
+        public NekoValueType @typeof(NekoValue* value) =>
             (NekoValueType)((NekoInt)(new NekoFunction("typeof", base["typeof"].@ref))
                 .InvokeWithNative(value) /* wtf */ - 1);
 
-        public NekoString smake(int size) => 
+        public NekoString smake(int size) =>
             (NekoString)(new NekoFunction(nameof(smake), base[nameof(smake)].@ref))
                 .InvokeWithNative(Native.neko_alloc_int(size));
         public NekoInt ssize(NekoString str) =>

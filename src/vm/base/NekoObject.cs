@@ -44,6 +44,6 @@
         public static implicit operator float(NekoObject s) => (NekoFloat)s;
         public static implicit operator double(NekoObject s) => (NekoFloat)s;
         #endregion
-        
+
     }
 }

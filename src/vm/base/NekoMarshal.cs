@@ -30,7 +30,7 @@
         }
 
 
-        public static NekoValue* CLRToPrt<T>(T value) 
+        public static NekoValue* CLRToPrt<T>(T value)
             => CLRToPrt((object)value);
 
         public static NekoValue* CLRToPrt(object value)
@@ -44,7 +44,7 @@
             if (value is double d)
                 return (NekoFloat)d;
             if (value is bool b)
-                return (NekoBool) b;
+                return (NekoBool)b;
             if (value is NekoFunction fn)
                 return fn.@ref;
             if (value is NekoArray ar)
@@ -64,7 +64,7 @@
             if (value is sbyte i8)
                 return (NekoInt)i8;
             #endregion
-           
+
             if (value is Delegate)
                 throw new NotSupportedException($"temporary delegates not support");
             throw new NotSupportedException($"Type {value.GetType()} is not support marshaling.");
@@ -77,7 +77,7 @@
         }
 
         public static Type GetCLRVariant(uint type)
-            => GetCLRVariant((NekoValueType) type);
+            => GetCLRVariant((NekoValueType)type);
         public static Type GetCLRVariant(NekoValueType type)
         {
             if (variants.Any(x => x.Value == type))

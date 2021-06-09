@@ -44,7 +44,7 @@ public static class Input
         }
 
         var compilerFile = await GetOrCreateCompilerAsync();
-        
+
         if (args is { Length: 0 })
             return await ExecAsync(compilerFile, "--help", "-v");
         return await ExecAsync(compilerFile, args.Concat(new[] { "-v" }).ToArray());
@@ -108,7 +108,7 @@ public static class Input
                 Syscall.chmod(c_binary.FullName, FilePermissions.ACCESSPERMS);
             };
             extractor(GetFolderForCache().FullName);
-            
+
             return c_binary;
         }
 

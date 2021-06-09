@@ -15,12 +15,12 @@
 
             Message = new NekoString((NekoValue*)raw->msg);
             File = new NekoString((NekoValue*)raw->file);
-            Function  = new NekoString((NekoValue*)raw->funcsig);
+            Function = new NekoString((NekoValue*)raw->funcsig);
             Line = ((IntPtr)(raw->line)).ToInt32();
         }
 
 
-        
-        public __exception* AsInternal() => (__exception*) this.@ref;
+
+        public __exception* AsInternal() => (__exception*)this.@ref;
     }
 }

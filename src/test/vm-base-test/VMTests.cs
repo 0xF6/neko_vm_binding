@@ -19,7 +19,7 @@
         }
 
         [OneTimeTearDown]
-        public void Shutdown() 
+        public void Shutdown()
             => (vm as IDisposable).Dispose();
 
         [Test]
@@ -42,7 +42,7 @@
             var robj = module["testObject"].Invoke() as NekoRuntimeObject;
             Assert.NotNull(robj);
             Assert.AreEqual(
-                new[]{"x","y", "text", "fn"}.OrderBy(x => x),
+                new[] { "x", "y", "text", "fn" }.OrderBy(x => x),
                 robj.GetFields().OrderBy(x => x));
         }
         [Test]

@@ -118,8 +118,8 @@
         public static extern NekoValue* neko_default_loader(char** argv, int argc);
         [DllImport("neko")]
         public static extern NekoValue* neko_val_callEx(
-            NekoValue* @this, 
-            NekoValue* v, 
+            NekoValue* @this,
+            NekoValue* v,
             NekoValue** args,
             int nargs,
             ref NekoValue* exc);
@@ -176,15 +176,15 @@
         [DllImport("neko", CharSet = CharSet.Ansi)]
         public static extern NekoValue* neko_alloc_function(void* c_prim, uint args, string name);
         public static NekoValue* neko_alloc_bool(bool b) => b ? v_true() : v_false();
-        public static NekoValue* neko_alloc_int(int v) => (NekoValue*) (IntPtr) ((v << 1) | 1);
+        public static NekoValue* neko_alloc_int(int v) => (NekoValue*)(IntPtr)((v << 1) | 1);
 
         [DllImport("neko")]
         public static extern NekoValue* neko_alloc_float(double value);
 
         [DllImport("neko")]
         public static extern NekoValue* neko_alloc_array(uint size);
-        public static int neko_val_array_size(NekoArray v) 
-            => (int)((uint) NekoType.tag(v.@ref) >> 4);
+        public static int neko_val_array_size(NekoArray v)
+            => (int)((uint)NekoType.tag(v.@ref) >> 4);
     }
 
 

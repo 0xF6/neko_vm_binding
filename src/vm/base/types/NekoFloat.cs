@@ -5,7 +5,7 @@
     public sealed unsafe class NekoFloat : NekoObject, INativeCast<_neko_float>
     {
         internal NekoFloat(NekoValue* value) : base(value) => NekoAssert.IsFloat(value);
-        public _neko_float* AsInternal() => (_neko_float*) @ref;
+        public _neko_float* AsInternal() => (_neko_float*)@ref;
 
         public static implicit operator float(NekoFloat i)
         {
@@ -22,9 +22,9 @@
 
         public float GetValue() => this;
 
-        public static implicit operator NekoFloat(float i) => 
+        public static implicit operator NekoFloat(float i) =>
             new NekoFloat(Native.neko_alloc_float(i));
-        public static implicit operator NekoFloat(double i) => 
+        public static implicit operator NekoFloat(double i) =>
             new NekoFloat(Native.neko_alloc_float(i));
     }
 }

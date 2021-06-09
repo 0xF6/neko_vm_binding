@@ -28,7 +28,7 @@
             // TODO check function is static
             var p = Marshal.GetFunctionPointerForDelegate(actor);
             var result = Native.neko_alloc_function((void*)p, 0, name);
-            return new NekoFunction(name, result) {_kind = NekoFunctionKind.Exported};
+            return new NekoFunction(name, result) { _kind = NekoFunctionKind.Exported };
         }
 
         public static NekoFunction Create(NekoModule module, string functionName)
@@ -57,17 +57,17 @@
             throw new Exception();
         }
 
-        public R Invoke<R>(params object[] args) 
+        public R Invoke<R>(params object[] args)
             => NekoMarshal.PtrToCLR<R>(Invoke(args).@ref);
 
         public NekoObject Invoke(params object[] args)
         {
             if (args is null)
-                args = new object[] {null};
-            if(args.Length != ArgCount)
+                args = new object[] { null };
+            if (args.Length != ArgCount)
                 throw new InvalidArgumentNekoException();
             var nargs = new NekoValue*[args.Length];
-            for (var i = 0; i != args.Length; i++) 
+            for (var i = 0; i != args.Length; i++)
                 nargs[i] = NekoMarshal.CLRToPrt(args[i]);
             var result = args.Length switch
             {
@@ -90,7 +90,7 @@
         public static NekoValue** AllocateArgs(params object[] args)
         {
             var newArgs = stackalloc NekoValue*[args.Length];
-            for (var i = 0; i != args.Length; i++) 
+            for (var i = 0; i != args.Length; i++)
                 newArgs[i] = NekoMarshal.CLRToPrt(args[i]);
             return newArgs;
         }
@@ -99,6 +99,6 @@
         public static implicit operator InvokeN(NekoFunction fun) => fun.Invoke;
 
 
-        public _neko_function* AsInternal() => (_neko_function*) @ref;
+        public _neko_function* AsInternal() => (_neko_function*)@ref;
     }
 }
