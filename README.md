@@ -28,6 +28,16 @@
 </p>
 
 
+<h1 align="center">
+  Deprecated as of 2021-09-09
+</h1>
+<h3 align="center">
+  See <a href="https://github.com/HaxeFoundation/neko">HaxeFoundation/neko</a>
+</h3>
+
+
+
+
 ```powershell
 Install-Package Ivy.NekoVM -Version 2.3.1-preview.6
 ```
